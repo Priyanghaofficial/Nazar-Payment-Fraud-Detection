@@ -61,15 +61,17 @@ The system includes a self-enforced decision deadline and a degraded path for ha
 
 ## Technology Stack
 
-- **Backend:** Go
-- **Machine Learning:** Python, LightGBM
-- **Frontend:** React, TypeScript, Tailwind CSS
-- **Database:** PostgreSQL
-- **Real-Time Store:** Redis
-- **Rules:** CEL
-- **Containerization:** Docker / Podman
-- **Build & Automation:** Make
-- **Data Processing:** Python
+- Go
+- Python
+- LightGBM
+- React
+- TypeScript
+- Tailwind CSS
+- PostgreSQL
+- Redis
+- CEL
+- Docker / Podman
+- Make
 
 ## Architecture
 
@@ -100,3 +102,96 @@ The system includes a self-enforced decision deadline and a degraded path for ha
               |                           |
               v                           v
       Operator Console             PostgreSQL
+```
+
+## Project Structure
+
+```text
+go/                 Decision service
+py/generator/       Synthetic transaction generator
+py/training/        Feature processing and LightGBM training
+py/eval/            Dataset validation
+console/            React/TypeScript operator console
+features/           Feature registry
+policy/             Decision policy bundles
+rules/              CEL rule bundles
+sql/migrations/     Database migrations
+docs/               Architecture and project documentation
+```
+
+## Quick Start
+
+### Requirements
+
+- Go 1.22+
+- Python 3.11+
+- Node.js 20+
+- Podman or Docker
+
+### Setup
+
+Start Redis and PostgreSQL and apply the database migrations:
+
+```bash
+make setup
+```
+
+Generate synthetic transaction data:
+
+```bash
+make generate
+```
+
+Train the LightGBM model:
+
+```bash
+make train
+```
+
+Start the backend:
+
+```bash
+make dev
+```
+
+Start the React console in another terminal:
+
+```bash
+make console-dev
+```
+
+Run the demonstration scenarios:
+
+```bash
+make demo
+```
+
+## Testing
+
+Run the project test suite:
+
+```bash
+make test
+```
+
+The test suite includes Go build checks, static analysis, and architecture/invariant tests.
+
+## Dataset Validation
+
+The project also supports optional validation using the ULB credit-card fraud dataset:
+
+```bash
+make validate-ulb
+```
+
+This is used as a validation exercise for the training methodology and should not be interpreted as a direct measurement of real-world payment fraud detection performance.
+
+## Project Objective
+
+The objective of Nazar is to provide a production-shaped prototype for real-time payment fraud detection that can process transactions quickly, identify suspicious behaviour, provide explainable decisions, and maintain an auditable record of decisions.
+
+## Project Type
+
+Team Project
+
+**Project:** Nazar – Real-Time Payment Fraud Detection System

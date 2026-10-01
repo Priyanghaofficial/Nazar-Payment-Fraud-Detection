@@ -1,0 +1,53 @@
+syntax = "proto3";
+package nazar.v1;
+
+// TYPE 1 CONTRACT — additive changes only. Readers ignore unknown fields.
+// See docs/02-DATA-AND-FEATURES.md §1 and CLAUDE.md ("proto/ changes require an ADR").
+//
+// P0 NOTE: the wire implementation is Go structs (go/internal/contract/event.go) serialised
+// as JSON, not generated protobuf code — JSON-into-struct unmarshalling already gives us
+// "readers ignore unknown fields" for free, and it removes a protoc toolchain dependency
+// from a hackathon build. This file is the contract of record; the Go struct must match it
+// field-for-field. Swapping the wire format later is a Type 2 change behind the same struct.
+message Event {
+  // ── identity ─────────────────────────────────────────────────
+  string end_to_end_id  = 1;   // idempotency key
+  int64  event_ts_ms    = 2;   // claimed by the producer — NEVER used for windowing
+  int64  accepted_at_ms = 3;   // stamped by Nazar at the trust boundary. THIS drives windows
+  string rail            = 4;  // UPI | IMPS | NEFT | CARD_CNP | CARD_CP
+  string channel          = 5; // MOBILE | WEB | BRANCH | ATM | API
+  string bank_instance    = 6; // participant id, from a real registry
+
+  // ── parties ──────────────────────────────────────────────────
+  string debtor_account   = 10;
+  string debtor_vpa       = 11;
+  string creditor_account = 12;
+  string creditor_vpa     = 13;
+  string creditor_ifsc    = 14;
+
+  // ── money — integer minor units, always ──────────────────────
+  int64  instructed_amount_minor = 20;
+  string currency                = 21; // ISO 4217
+
+  // ── channel context ──────────────────────────────────────────
+  string device_id   = 30;
+  string ip          = 31;
+  int32  asn         = 32;
+  string geo_cell    = 33;
+  string session_id  = 34;
+  string app_version = 35;
+
+  // ── payment context ──────────────────────────────────────────
+  string initiation      = 40; // QR | INTENT | COLLECT | P2P | MANDATE
+  string remittance_info = 41; // ATTACKER-CONTROLLED FREE TEXT. Never reaches an LLM.
+
+  // ── claims: asserted by the caller, NOT trusted, kept for the signal in the lie ──
+  ClaimedFacts claimed = 50;
+
+  uint32 schema_version = 99;
+}
+
+message ClaimedFacts {
+  int64 creditor_account_opened_ms = 1; // rarely available and not verifiable inter-bank
+  int64 device_first_seen_ms       = 2; // client-asserted; server value always wins
+}

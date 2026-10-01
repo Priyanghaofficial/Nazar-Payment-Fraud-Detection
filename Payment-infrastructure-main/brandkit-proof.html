@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Nazar — Brand Kit</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=switzer@400,500,600&f[]=zodiak@400,500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Spline+Sans+Mono:wght@400;500;600&display=swap">
+<style>
+:root{
+  --canvas:#F6F6F4; --panel:#FFFFFF; --sunken:#EFEFEC;
+  --line:#E2E2DE; --line-strong:#C6C6C0;
+  --ink-900:#111310; --ink-700:#3E413C; --ink-500:#6C706A; --ink-300:#A0A49D;
+  --paper:#FBFAF7; --paper-sunken:#F3F1EC; --paper-line:#E4E0D6;
+
+  --ultra-600:#16289B; --ultra-500:#1F35B5; --ultra-400:#3D53DA; --ultra-wash:#EAECFB;
+  --allow:#17795A; --stepup:#9A6410; --hold:#8A3D14; --block:#A82434;
+
+  --font-mono:"Spline Sans Mono",ui-monospace,SFMono-Regular,monospace;
+  --font-ui:"Switzer",ui-sans-serif,system-ui,-apple-system,sans-serif;
+  --font-display:"Zodiak",Georgia,serif;
+
+  --r-console:2px; --r-payer:12px; --r-chip:3px; --row:26px;
+}
+[data-mono="on"]{filter:grayscale(1)}
+*{box-sizing:border-box;font-variant-numeric:tabular-nums}
+body{margin:0;background:var(--canvas);color:var(--ink-900);
+  font-family:var(--font-ui);font-size:13px;line-height:20px;-webkit-font-smoothing:antialiased}
+:focus-visible{outline:2px solid var(--ultra-500);outline-offset:2px;border-radius:2px}
+code{font-family:var(--font-mono);font-size:.92em}
+
+/* shell */
+.shell{display:grid;grid-template-columns:190px 1fr;min-height:100vh}
+.rail{background:var(--panel);border-right:1px solid var(--line);padding:18px 0;position:sticky;top:0;height:100vh}
+.mark{padding:0 18px 20px;display:flex;align-items:center;gap:9px}
+.mark i{width:20px;height:20px;background:var(--ultra-500);border-radius:2px;display:block;flex:none}
+.mark b{font-family:var(--font-mono);font-size:12px;font-weight:600;letter-spacing:.1em;text-transform:uppercase}
+.rail a{display:block;padding:6px 18px;font-family:var(--font-mono);font-size:11px;letter-spacing:.05em;
+  color:var(--ink-500);text-decoration:none;border-left:2px solid transparent}
+.rail a:hover{color:var(--ink-900);background:var(--sunken)}
+.rail a.on{color:var(--ultra-500);border-left-color:var(--ultra-500);font-weight:500}
+.rail .grp{padding:16px 18px 5px;font-family:var(--font-mono);font-size:10px;letter-spacing:.09em;
+  text-transform:uppercase;color:var(--ink-300)}
+.main{padding:0 34px 90px;max-width:1000px}
+
+.top{position:sticky;top:0;z-index:5;background:var(--canvas);padding:20px 0 14px;
+  border-bottom:1px solid var(--line);display:flex;align-items:baseline;gap:14px;flex-wrap:wrap}
+.top h1{font-family:var(--font-display);font-weight:400;font-size:30px;line-height:34px;margin:0;letter-spacing:-.01em}
+.top p{margin:0;color:var(--ink-500);font-size:12px}
+.gsbtn{margin-left:auto;font-family:var(--font-mono);font-size:10px;letter-spacing:.07em;text-transform:uppercase;
+  background:var(--panel);border:1px solid var(--line-strong);border-radius:var(--r-console);
+  padding:6px 11px;cursor:pointer;color:var(--ink-700)}
+.gsbtn[aria-pressed=true]{background:var(--ultra-500);border-color:var(--ultra-500);color:#fff}
+
+h2{font-family:var(--font-mono);font-size:11px;line-height:15px;letter-spacing:.07em;text-transform:uppercase;
+  color:var(--ink-500);font-weight:500;margin:48px 0 14px;display:flex;align-items:center;gap:10px}
+h2 em{font-family:var(--font-display);font-style:normal;font-size:15px;color:var(--ink-300);letter-spacing:0}
+h2:after{content:"";flex:1;border-top:1px solid var(--line)}
+.note{color:var(--ink-500);max-width:66ch;margin:0 0 16px;font-size:12.5px}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:var(--r-console);padding:18px}
+.grid{display:grid;gap:14px}
+.g2{grid-template-columns:repeat(auto-fit,minmax(290px,1fr))}
+.g4{grid-template-columns:repeat(auto-fit,minmax(150px,1fr))}
+.lbl{font-family:var(--font-mono);font-size:10px;line-height:14px;letter-spacing:.09em;
+  text-transform:uppercase;color:var(--ink-500)}
+
+/* type spec */
+.spec{display:grid;grid-template-columns:120px 1fr;gap:14px 20px;align-items:baseline}
+.spec .k{font-family:var(--font-mono);font-size:10px;letter-spacing:.07em;text-transform:uppercase;color:var(--ink-300)}
+
+/* swatch */
+.sw{border:1px solid var(--line);border-radius:var(--r-console);overflow:hidden;background:var(--panel)}
+.sw i{height:56px;display:block}
+.sw b{font-family:var(--font-mono);font-size:10px;font-weight:400;padding:7px 9px;
+  display:flex;justify-content:space-between;color:var(--ink-500);border-top:1px solid var(--line)}
+.sw b span:last-child{color:var(--ink-900)}
+
+/* chips */
+.chip{display:inline-flex;align-items:center;gap:6px;font-family:var(--font-mono);font-size:10px;
+  line-height:14px;letter-spacing:.06em;padding:4px 8px;border-radius:var(--r-chip);margin:0 6px 6px 0}
+.c-clear{border:1px solid var(--line-strong);color:var(--ink-700)}
+.c-fired{border:1px solid var(--stepup);color:var(--stepup);background:color-mix(in srgb,var(--stepup) 12%,transparent)}
+.c-na{border:1px dashed var(--line-strong);color:var(--ink-300)}
+.c-ne{border:1px solid var(--line-strong);color:var(--ink-500);
+  background-image:repeating-linear-gradient(45deg,var(--line) 0 1px,transparent 1px 4px)}
+.chip u{text-decoration:none;color:var(--ink-300)}
+
+/* decision block */
+.dblock{background:var(--ultra-500);color:#fff;border-radius:var(--r-console);padding:16px 18px 14px;min-width:250px}
+.dblock .top-l{font-family:var(--font-mono);font-size:10px;letter-spacing:.09em;text-transform:uppercase;
+  color:rgba(255,255,255,.62);margin-bottom:3px}
+.dblock h3{font-family:var(--font-mono);font-size:15px;font-weight:600;letter-spacing:.02em;margin:0 0 16px}
+.rung{display:flex;align-items:center;gap:9px;height:22px;font-family:var(--font-mono);
+  font-size:11px;letter-spacing:.04em;color:rgba(255,255,255,.5)}
+.rung .pip{width:7px;height:7px;border-radius:9px;border:1px solid rgba(255,255,255,.5);flex:none}
+.rung.on{color:#fff;font-weight:500}
+.rung.on .pip{background:#fff;border-color:#fff}
+.ceil{display:flex;align-items:center;gap:8px;margin:5px 0;font-family:var(--font-mono);font-size:9px;
+  letter-spacing:.09em;text-transform:uppercase;color:rgba(255,255,255,.55)}
+.ceil:before,.ceil:after{content:"";flex:1;border-top:1px dashed rgba(255,255,255,.4)}
+.offl{margin-top:14px;padding-top:11px;border-top:1px solid rgba(255,255,255,.22);display:flex;gap:18px;
+  font-family:var(--font-mono);font-size:10px;letter-spacing:.06em;color:rgba(255,255,255,.72)}
+
+/* table */
+table{width:100%;border-collapse:collapse;font-family:var(--font-mono);font-size:12px}
+th{font-size:10px;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-500);font-weight:400;
+  text-align:left;padding:0 10px 8px;border-bottom:1px solid var(--line-strong)}
+td{padding:0 10px;height:var(--row);border-bottom:1px solid var(--line);color:var(--ink-700)}
+tr:hover td{background:var(--sunken)}
+td.n{text-align:right;color:var(--ink-900);font-feature-settings:"tnum" 1,"zero" 1}
+tr.fresh td:first-child{box-shadow:inset 2px 0 0 var(--ultra-500)}
+.act{font-size:10px;letter-spacing:.06em;text-transform:uppercase}
+.a1{color:var(--allow)}.a2{color:var(--stepup)}.a3{color:var(--hold)}.a4{color:var(--block)}.a5{color:var(--ink-700)}
+
+.fig{font-family:var(--font-mono);font-weight:500;font-size:24px;line-height:28px;display:block;
+  min-width:6ch;font-feature-settings:"tnum" 1,"zero" 1}
+.hero{font-family:var(--font-display);font-size:44px;line-height:46px;display:block;letter-spacing:-.015em}
+.lat{display:flex;gap:26px;font-family:var(--font-mono);font-size:12px}
+.lat .k{font-size:9px;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-300);display:block}
+.lat .v{color:var(--ink-500)} .lat .tot .v{color:var(--ink-900);font-weight:600}
+
+/* shap */
+.shap{display:grid;grid-template-columns:165px 1fr 52px;gap:7px 12px;align-items:center;
+  font-family:var(--font-mono);font-size:11px;color:var(--ink-700)}
+.trk{height:8px;background:var(--sunken);border-radius:1px;position:relative}
+.trk i{position:absolute;top:0;bottom:0;left:50%;background:var(--stepup)}
+.trk i.neg{background:var(--allow)}
+.shap .v{text-align:right;color:var(--ink-900);font-feature-settings:"tnum" 1}
+
+.foot{font-family:var(--font-mono);font-size:10px;line-height:17px;color:var(--ink-500);
+  border-top:1px solid var(--line);margin-top:16px;padding-top:11px}
+.foot b{color:var(--ink-900);font-weight:400}
+.w{color:var(--stepup)} .u{color:var(--ultra-500)}
+
+/* payer */
+.phone{width:294px;background:var(--paper);border:1px solid var(--paper-line);border-radius:20px;padding:22px}
+.phone .to{color:var(--ink-500);font-size:12px;line-height:17px}
+.phone .amt{font-family:var(--font-mono);font-size:38px;line-height:42px;font-weight:500;letter-spacing:-.02em}
+.phone .card{background:var(--paper-sunken);border:1px solid var(--paper-line);
+  border-radius:var(--r-payer);padding:15px;margin:18px 0}
+.phone .card h4{font-family:var(--font-display);font-size:20px;line-height:26px;font-weight:400;margin:0 0 7px}
+.phone .card p{margin:0;font-size:13.5px;line-height:20px;color:var(--ink-700)}
+.bar{width:30px;height:3px;background:var(--stepup);margin-bottom:11px}
+.pb{display:block;width:100%;border-radius:var(--r-payer);padding:13px;font-size:15px;font-weight:500;
+  font-family:var(--font-ui);cursor:pointer;border:1px solid transparent;margin-top:8px}
+.pb.p{background:var(--ultra-500);color:#fff}
+.pb.g{background:transparent;color:var(--ink-700);border-color:var(--paper-line)}
+
+.deg{background:var(--sunken);border:1px solid var(--line-strong);border-left:3px solid var(--ink-500);
+  border-radius:var(--r-console);padding:11px 14px;font-family:var(--font-mono);font-size:11px;letter-spacing:.03em}
+.lane{display:flex;align-items:center;gap:9px;height:22px;font-family:var(--font-mono);
+  font-size:11px;letter-spacing:.04em;color:var(--ink-700)}
+.lane .l{width:7px;height:7px;border-radius:9px;background:var(--allow);flex:none}
+.lane.sh .l{background:var(--ink-300)} .lane.sh{color:var(--ink-500)}
+.lane.dim{opacity:.45} .lane.dim .l{background:var(--ink-300)}
+
+.dos{display:grid;grid-template-columns:1fr 1fr}
+.dos>div{padding:16px 18px}
+.dos>div:first-child{border-right:1px solid var(--line)}
+ul{margin:8px 0 0;padding-left:16px;color:var(--ink-700);font-size:12.5px}
+li{margin-bottom:6px}
+.tag{font-family:var(--font-mono);font-size:10px;letter-spacing:.09em;text-transform:uppercase}
+@media(prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+@media(max-width:820px){.shell{grid-template-columns:1fr}.rail{display:none}.main{padding:0 18px 60px}}
+</style>
+</head>
+<body>
+<div class="shell">
+
+<nav class="rail">
+  <div class="mark"><i></i><b>Nazar</b></div>
+  <div class="grp">Foundation</div>
+  <a href="#type" class="on">Type</a>
+  <a href="#colour">Colour</a>
+  <div class="grp">Components</div>
+  <a href="#block">Decision block</a>
+  <a href="#chips">State chips</a>
+  <div class="grp">Screens</div>
+  <a href="#s1">S1 · Ops</a>
+  <a href="#s2">S2 · Alert</a>
+  <a href="#deg">Degradation</a>
+  <a href="#s0">S0 · Payer</a>
+  <div class="grp">Rules</div>
+  <a href="#rules">Do / don't</a>
+</nav>
+
+<main class="main">
+
+<div class="top">
+  <h1>Clearing House</h1>
+  <p>Brand kit · v2 · 2026-08-14</p>
+  <button class="gsbtn" id="gs" aria-pressed="false">Greyscale · G</button>
+</div>
+
+<h2 id="type"><em>01</em> Type</h2>
+<p class="note">Spline Sans Mono carries roughly 80% of the console — every numeral, cell, label and
+identifier. Switzer handles prose and controls. Zodiak appears only above 20px.</p>
+<div class="panel">
+  <div class="spec">
+    <span class="k">display · zodiak</span>
+    <span style="font-family:var(--font-display);font-size:34px;line-height:38px">₹4.2L prevented today</span>
+    <span class="k">lead · switzer 500</span>
+    <span style="font-size:15px;line-height:22px;font-weight:500">₹49,999 to a beneficiary we first saw 3 days ago</span>
+    <span class="k">body · switzer</span>
+    <span style="font-size:13px;line-height:20px;color:var(--ink-700)">Eleven other payers have sent to this account today, and 94% of what it receives leaves within a minute.</span>
+    <span class="k">cell · mono</span>
+    <span style="font-family:var(--font-mono);font-size:12px;font-feature-settings:'tnum' 1,'zero' 1">a3f1…9e2b → 7c04…11da &nbsp; ₹49,999.00 &nbsp; 09:41:12.338</span>
+    <span class="k">label · mono</span>
+    <span class="lbl">live decisions · coalesced</span>
+    <span class="k">figures</span>
+    <span style="font-family:var(--font-mono);font-size:24px;font-weight:500;font-feature-settings:'tnum' 1,'zero' 1">0123456789 · ₹1,24,500.00</span>
+  </div>
+</div>
+
+<h2 id="colour"><em>02</em> Colour</h2>
+<p class="note">Ultramarine is structure — solid fills only, never a pale tint behind text. The four
+risk hues appear on nothing but risk state.</p>
+<div class="grid g4">
+  <div class="sw"><i style="background:var(--ultra-500)"></i><b><span>ultra-500</span><span>#1F35B5</span></b></div>
+  <div class="sw"><i style="background:var(--allow)"></i><b><span>allow</span><span>#17795A</span></b></div>
+  <div class="sw"><i style="background:var(--stepup)"></i><b><span>step_up</span><span>#9A6410</span></b></div>
+  <div class="sw"><i style="background:var(--hold)"></i><b><span>hold</span><span>#8A3D14</span></b></div>
+  <div class="sw"><i style="background:var(--block)"></i><b><span>block</span><span>#A82434</span></b></div>
+  <div class="sw"><i style="background:var(--canvas)"></i><b><span>canvas</span><span>#F6F6F4</span></b></div>
+  <div class="sw"><i style="background:var(--sunken)"></i><b><span>sunken</span><span>#EFEFEC</span></b></div>
+  <div class="sw"><i style="background:var(--ink-900)"></i><b><span>ink-900</span><span>#111310</span></b></div>
+</div>
+
+<h2 id="block"><em>03</em> Decision block</h2>
+<div class="grid g2">
+  <div class="dblock">
+    <div class="top-l">decision · case 40219</div>
+    <h3>STEP_UP_INTERSTITIAL</h3>
+    <div class="rung"><span class="pip"></span>ALLOW</div>
+    <div class="rung"><span class="pip"></span>ALLOW_MONITOR</div>
+    <div class="rung"><span class="pip"></span>STEP_UP</div>
+    <div class="rung on"><span class="pip"></span>STEP_UP_INTERSTITIAL</div>
+    <div class="ceil">advisory ceiling</div>
+    <div class="rung"><span class="pip"></span>HOLD</div>
+    <div class="offl"><span>⌐ CAP</span><span>⊘ BLOCK</span></div>
+  </div>
+  <div class="panel">
+    <p class="note" style="margin:0">The only saturated surface in the product. All five rungs render
+    even when four are empty — the unreachable ones are the information.</p>
+    <p class="note" style="margin:12px 0 0">The dashed ceiling reads <code>policy.advisory_max_rung</code>
+    from the decision record. CAP and BLOCK sit below a rule because they are not rungs; CAP is a
+    ceiling, not a judgement, so it never takes a risk hue.</p>
+  </div>
+</div>
+
+<h2 id="chips"><em>04</em> State chips</h2>
+<div class="panel">
+  <span class="chip c-clear">✓ device_new</span>
+  <span class="chip c-fired">▲ payee_fanin_24h</span>
+  <span class="chip c-na">— geo_velocity <u>· imps</u></span>
+  <span class="chip c-ne">○ pair_amt_ratio_p95 <u>· cold_start</u></span>
+  <span class="chip c-ne">○ payee_fwd_ratio_1h <u>· stale</u></span>
+  <p class="note" style="margin:14px 0 0">Hatch, dash, outline, fill — four shapes, so the set holds
+  in greyscale and in a photo of a projector. Hit <b>G</b> to check.</p>
+</div>
+
+<h2 id="s1"><em>05</em> S1 · Ops console</h2>
+<div class="panel">
+  <div class="grid" style="grid-template-columns:1fr 175px;gap:24px">
+    <div>
+      <div class="lbl" style="margin-bottom:10px">Live decisions · coalesced</div>
+      <table>
+        <thead><tr><th>ts</th><th>payer → payee</th><th style="text-align:right">amount</th><th>action</th></tr></thead>
+        <tbody>
+          <tr class="fresh"><td>09:41:12.338</td><td>a3f1…9e2b → 7c04…11da</td><td class="n">₹49,999.00</td><td><span class="act a2">step_up_interstitial</span></td></tr>
+          <tr><td>09:41:12.104</td><td>be22…40cf → 1d9a…8b31</td><td class="n">₹1,20,000.00</td><td><span class="act a5">⌐ cap</span></td></tr>
+          <tr><td>09:41:11.771</td><td>0e5d…2a77 → 9f13…c602</td><td class="n">₹340.00</td><td><span class="act a1">allowed</span></td></tr>
+          <tr><td>09:41:11.402</td><td>77bc…d180 → 4a80…5e19</td><td class="n">₹8,250.00</td><td><span class="act a1">allowed</span></td></tr>
+          <tr><td>09:41:11.019</td><td>3e91…77ab → 7c04…11da</td><td class="n">₹62,000.00</td><td><span class="act a3">hold</span></td></tr>
+          <tr><td>09:41:10.955</td><td>c104…6f2e → 7c04…11da</td><td class="n">₹2,40,000.00</td><td><span class="act a4">⊘ blocked</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div>
+      <div class="lbl" style="margin-bottom:10px">Lanes</div>
+      <div class="lane"><span class="l"></span>rules</div>
+      <div class="lane"><span class="l"></span>model</div>
+      <div class="lane sh"><span class="l"></span>novelty · shadow</div>
+      <div class="lane"><span class="l"></span>graph</div>
+      <div class="lane"><span class="l"></span>consortium</div>
+    </div>
+  </div>
+  <div class="grid g4" style="margin-top:22px;padding-top:16px;border-top:1px solid var(--line)">
+    <div><span class="lbl">value prevented</span><span class="hero">₹4.2L</span></div>
+    <div><span class="lbl">challenge rate</span><span class="fig">1.4%</span></div>
+    <div><span class="lbl">policy</span><span class="fig">.001</span></div>
+    <div>
+      <span class="lbl" style="margin-bottom:4px;display:block">latency</span>
+      <div class="lat" style="flex-direction:column;gap:1px">
+        <div><span class="k">queue</span><span class="v">0.1 ms</span></div>
+        <div><span class="k">service</span><span class="v">0.6 ms</span></div>
+        <div class="tot"><span class="k">total · p99 9.4</span><span class="v">0.7 ms</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<h2 id="s2"><em>06</em> S2 · Alert detail</h2>
+<div class="panel">
+  <div class="grid" style="grid-template-columns:1fr 250px;gap:24px;align-items:start">
+    <div>
+      <div style="font-size:15px;line-height:22px;font-weight:500;margin-bottom:3px">₹49,999 to a beneficiary we first saw 3 days ago</div>
+      <div class="lbl" style="margin-bottom:18px">case 40219 · app_scam · upi</div>
+      <div class="lbl" style="margin-bottom:10px">Contributions · TreeSHAP</div>
+      <div class="shap">
+        <span>payee_fanin_24h</span><div class="trk"><i style="width:31%"></i></div><span class="v">+0.94</span>
+        <span>payee_fwd_ratio_1h</span><div class="trk"><i style="width:24%"></i></div><span class="v">+0.71</span>
+        <span>amt_over_p95</span><div class="trk"><i style="width:17%"></i></div><span class="v">+0.52</span>
+        <span>pair_first_added_h</span><div class="trk"><i style="width:11%"></i></div><span class="v">+0.33</span>
+        <span>payer_tenure_days</span><div class="trk"><i class="neg" style="left:42%;width:8%"></i></div><span class="v">−0.24</span>
+      </div>
+      <div class="lbl" style="margin:20px 0 9px">Signals</div>
+      <span class="chip c-fired">▲ payee_fanin_24h</span>
+      <span class="chip c-fired">▲ payee_fwd_ratio_1h</span>
+      <span class="chip c-clear">✓ device_new</span>
+      <span class="chip c-na">— geo_velocity <u>· imps</u></span>
+      <span class="chip c-ne">○ pair_amt_ratio_p95 <u>· cold_start</u></span>
+    </div>
+    <div class="dblock">
+      <div class="top-l">decision</div>
+      <h3>STEP_UP_<br>INTERSTITIAL</h3>
+      <div class="rung"><span class="pip"></span>ALLOW</div>
+      <div class="rung"><span class="pip"></span>ALLOW_MONITOR</div>
+      <div class="rung"><span class="pip"></span>STEP_UP</div>
+      <div class="rung on"><span class="pip"></span>STEP_UP_INTERSTITIAL</div>
+      <div class="ceil">advisory ceiling</div>
+      <div class="rung"><span class="pip"></span>HOLD</div>
+    </div>
+  </div>
+  <div class="foot">
+    model <b>upi-v1.4</b> &nbsp; policy <b>2026-08-14.001</b> &nbsp; rules <b>.003</b> &nbsp; registry <b>.002</b><br>
+    features fresh · payer <b>0.2 s</b> · payee <b>0.4 s</b> · graph <b>3.1 s</b> <span class="w">⚠</span> · consortium <b>1.1 s</b><br>
+    degraded <b>none</b> &nbsp;·&nbsp; decided <b>0.68 ms</b> &nbsp;·&nbsp; chain <b>#40219</b> <span class="u">✓ verified</span>
+  </div>
+</div>
+
+<h2 id="deg"><em>07</em> Degradation</h2>
+<div class="panel">
+  <div class="deg">DEGRADED · profile store unreachable · rails-only decisioning · value capped at ₹5,000 · no BLOCK path active</div>
+  <div style="display:flex;gap:28px;margin-top:16px;flex-wrap:wrap">
+    <div><div class="lane"><span class="l"></span>rules</div><div class="lane dim"><span class="l"></span>model</div><div class="lane dim"><span class="l"></span>graph</div></div>
+    <p class="note" style="margin:0;flex:1;min-width:250px">Grey, never red — red is BLOCK. The claim
+    during Act 6 is that degradation is <i>safe</i>, and a red banner would contradict the sentence
+    being spoken while it appears.</p>
+  </div>
+</div>
+
+<h2 id="s0"><em>08</em> S0 · Payer app</h2>
+<div style="display:flex;gap:24px;flex-wrap:wrap;align-items:flex-start">
+  <div class="phone">
+    <div class="to">Paying</div>
+    <div class="amt">₹49,999</div>
+    <div class="to" style="margin-top:3px">to rajesh.k@okhdfcbank</div>
+    <div class="card">
+      <div class="bar"></div>
+      <h4>Take a look before you send</h4>
+      <p>We first saw this account 3 days ago, and 11 other people have paid it today. That can be
+      normal for a new business — it's also what a scam collection account looks like.</p>
+    </div>
+    <button class="pb p">Go back</button>
+    <button class="pb g">Send anyway</button>
+  </div>
+  <div class="panel" style="flex:1;min-width:270px">
+    <p class="note" style="margin:0">Warmer paper, 12px radius, Zodiak headline, no mono anywhere
+    except the amount. <b>Zero engineering vocabulary</b> — no rung name, no score, no signal ID.</p>
+    <p class="note" style="margin:12px 0 0">“We first saw this account 3 days ago” — never “created”,
+    which is a claim the system can't support for an inter-bank payee.</p>
+    <p class="note" style="margin:12px 0 0">Go back is the weighted action; Send anyway stays
+    available and quiet. The judge chooses, and the case opens on override.</p>
+  </div>
+</div>
+
+<h2 id="rules"><em>09</em> Do / don't</h2>
+<div class="panel" style="padding:0">
+  <div class="dos">
+    <div>
+      <div class="tag" style="color:var(--allow);margin-bottom:4px">Do</div>
+      <ul>
+        <li>“We first saw this account 3 days ago”</li>
+        <li>Console: <code>ALLOWED</code></li>
+        <li>“Recovers 94% of generated mule fan-out”</li>
+        <li>Three latency figures, total emphasised</li>
+        <li>₹4,25,000.00 — en-IN, from paise</li>
+        <li>Hairlines, no shadows</li>
+        <li>Ultramarine as a solid block</li>
+      </ul>
+    </div>
+    <div>
+      <div class="tag" style="color:var(--block);margin-bottom:4px">Don't</div>
+      <ul>
+        <li>“This account was created 3 days ago”</li>
+        <li>A green “Verified” badge on an allow</li>
+        <li>“94% of fraud detected”</li>
+        <li>A lone latency number, anywhere</li>
+        <li>₹425,000.00 — 3-3-3 grouping</li>
+        <li>Gradients, blur, dark mode, spinners</li>
+        <li>Ultramarine as a pale tint behind text</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+</main>
+</div>
+
+<script>
+const h=document.documentElement,b=document.getElementById('gs');
+function t(){const on=h.getAttribute('data-mono')!=='on';h.setAttribute('data-mono',on?'on':'off');b.setAttribute('aria-pressed',String(on));}
+b.addEventListener('click',t);
+addEventListener('keydown',e=>{if(e.target.matches('input,textarea'))return;if(e.key==='g'||e.key==='G')t();});
+document.querySelectorAll('.rail a').forEach(a=>a.addEventListener('click',()=>{
+  document.querySelectorAll('.rail a').forEach(x=>x.classList.remove('on'));a.classList.add('on');}));
+</script>
+</body>
+</html>

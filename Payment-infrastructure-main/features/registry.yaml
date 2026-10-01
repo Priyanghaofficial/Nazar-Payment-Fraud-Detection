@@ -1,0 +1,290 @@
+# features/registry.yaml — one entry per feature. Machine-read by the Go scorer
+# (go/internal/features/registry.go), the Python trainer (py/training), and
+# test_feature_catalogue_key_coverage. Declared as data, not as code (docs/00 §3.2, §9;
+# docs/02 §4). Adding, removing, or changing a feature here is a Type 2 decision.
+#
+# provenance: A = attacker-controlled, B = attacker-shapeable, C = bank-observed (docs/02 §2)
+# monotone:  increasing | decreasing | "" (no LightGBM constraint)
+
+- id: amt_robust_z
+  version: 1
+  description: "0.6745*(amt-median)/mad_eff, guarded (docs/02 §5.1)"
+  requires_keys: ["b:{p:<acct>}"]
+  provenance: A
+  cost_to_forge: "trivial — the attacker picks the amount"
+  monotone: increasing
+  rails: [UPI, IMPS, NEFT, CARD_CNP, CARD_CP]
+  catches: [amount_outlier]
+
+- id: amt_over_p95
+  version: 1
+  description: "amt / p95, clipped to 20"
+  requires_keys: ["b:{p:<acct>}"]
+  provenance: A
+  cost_to_forge: "trivial"
+  monotone: increasing
+  rails: [UPI, IMPS, NEFT, CARD_CNP, CARD_CP]
+  catches: [amount_outlier]
+
+- id: hour_surprisal
+  version: 1
+  description: "-log2(P(hour)), Laplace-smoothed over the payer's own hour histogram"
+  requires_keys: ["h:{p:<acct>}:hourhist"]
+  provenance: A
+  cost_to_forge: "trivial — attacker picks the time"
+  monotone: increasing
+  rails: [UPI, IMPS, NEFT, CARD_CNP, CARD_CP]
+  catches: [ato, off_hours_fraud]
+
+- id: txn_velocity_1m
+  version: 1
+  description: "ZCOUNT payer txn window, 1 minute"
+  requires_keys: ["w:{p:<acct>}:txn"]
+  provenance: A
+  monotone: increasing
+  rails: [UPI, IMPS, NEFT, CARD_CNP, CARD_CP]
+  catches: [extreme_velocity]
+
+- id: txn_velocity_5m
+  version: 1
+  description: "ZCOUNT payer txn window, 5 minutes"
+  requires_keys: ["w:{p:<acct>}:txn"]
+  provenance: A
+  monotone: increasing
+  rails: [UPI, IMPS, NEFT, CARD_CNP, CARD_CP]
+  catches: [extreme_velocity]
+
+- id: txn_velocity_1h
+  version: 1
+  description: "ZCOUNT payer txn window, 1 hour"
+  requires_keys: ["w:{p:<acct>}:txn"]
+  provenance: A
+  monotone: increasing
+  rails: [UPI, IMPS, NEFT, CARD_CNP, CARD_CP]
+  catches: [extreme_velocity]
+
+- id: txn_velocity_24h
+  version: 1
+  description: "ZCOUNT payer txn window, 24 hours"
+  requires_keys: ["w:{p:<acct>}:txn"]
+  provenance: A
+  monotone: increasing
+  rails: [UPI, IMPS, NEFT, CARD_CNP, CARD_CP]
+  catches: [extreme_velocity]
+
+- id: amt_velocity_1h
+  version: 1
+  description: "bucketed 1h amount sum / 30d daily mean"
+  requires_keys: ["c:{p:<acct>}:amt:m", "c:{p:<acct>}:amt:d"]
+  provenance: A
+  monotone: increasing
+  rails: [UPI, IMPS, NEFT]
+  catches: [extreme_velocity, mule_fanout]
+
+- id: amt_velocity_24h
+  version: 1
+  description: "bucketed 24h amount sum / 30d daily mean"
+  requires_keys: ["c:{p:<acct>}:amt:h", "c:{p:<acct>}:amt:d"]
+  provenance: A
+  monotone: increasing
+  rails: [UPI, IMPS, NEFT]
+  catches: [extreme_velocity, mule_fanout]
+
+- id: account_age_days
+  version: 1
+  description: "days since we first saw the payer account"
+  requires_keys: ["f:{p:<acct>}:first_seen"]
+  provenance: C
+  monotone: decreasing
+  rails: [UPI, IMPS, NEFT, CARD_CNP, CARD_CP]
+  catches: [ato, new_account_fraud]
+
+- id: dormancy_days
+  version: 1
+  description: "(now - l:{p}.last_ts) / 86400000"
+  requires_keys: ["l:{p:<acct>}"]
+  provenance: C
+  monotone: increasing
+  rails: [UPI, IMPS, NEFT, CARD_CNP, CARD_CP]
+  catches: [ato]
+
+- id: baseline_staleness_h
+  version: 1
+  description: "hours since the payer baseline was last recomputed"
+  requires_keys: ["b:{p:<acct>}"]
+  provenance: C
+  monotone: ""
+  rails: [UPI, IMPS, NEFT, CARD_CNP, CARD_CP]
+  catches: [feature_freshness]
+
+- id: payee_is_new_to_payer
+  version: 1
+  description: "NOT SISMEMBER s:{p}:payees"
+  requires_keys: ["s:{p:<acct>}:payees"]
+  provenance: B
+  monotone: increasing
+  rails: [UPI, IMPS, NEFT]
+  catches: [app_scam, mule_fanout]
+
+- id: payee_first_seen_by_us_days
+  version: 1
+  description: "(now - f:{b}.first_seen) / 86400000. Named honestly (D8) — NOT account age."
+  requires_keys: ["f:{b:<acct>}:first_seen"]
+  provenance: B
+  monotone: decreasing
+  rails: [UPI, IMPS, NEFT]
+  catches: [app_scam, mule_fanout]
+
+- id: payee_fanin_1h
+  version: 2
+  description: "ZCOUNT distinct payers into this payee, 1 hour"
+  requires_keys: ["w:{b:<acct>}:payers"]
+  provenance: B
+  monotone: increasing
+  rails: [UPI, IMPS, NEFT]
+  catches: [mule_fanout]
+
+- id: payee_fanin_24h
+  version: 2
+  description: "ZCOUNT distinct payers into this payee, 24 hours"
+  requires_keys: ["w:{b:<acct>}:payers"]
+  provenance: B
+  monotone: increasing
+  rails: [UPI, IMPS, NEFT]
+  catches: [mule_fanout]
+
+- id: payee_fanin_burstiness
+  version: 1
+  description: "fanin_1h / (fanin_24h/24), gated on fanin_24h >= 6 (docs/02 §5.3)"
+  requires_keys: ["w:{b:<acct>}:payers"]
+  provenance: B
+  monotone: increasing
+  guard: "fanin_24h >= 6"
+  rails: [UPI, IMPS, NEFT]
+  catches: [mule_fanout]
+
+- id: pair_txn_count_90d
+  version: 1
+  description: "pr:{r}.txn_count_90d"
+  requires_keys: ["pr:{r:<payer>:<payee>}"]
+  provenance: C
+  monotone: decreasing
+  rails: [UPI, IMPS, NEFT, CARD_CNP, CARD_CP]
+  catches: [app_scam]
+
+- id: pair_amt_ratio_p95
+  version: 1
+  description: "amt / pr.amt_p95_minor, guarded (docs/02 §5.2)"
+  requires_keys: ["pr:{r:<payer>:<payee>}"]
+  provenance: B
+  monotone: increasing
+  guard: "pair.amt_p95 > 0 and pair.txn_count >= 3"
+  rails: [UPI, IMPS, NEFT]
+  catches: [app_scam]
+
+- id: payee_fwd_latency_p50_s
+  version: 1
+  description: "fwd:{b}.fwd_latency_p50_s, guarded on sample_n>=3 and freshness (docs/02 §5.4)"
+  requires_keys: ["fwd:{b:<acct>}"]
+  provenance: B
+  monotone: decreasing
+  guard: "fwd_sample_n >= 3 and not stale(15m)"
+  rails: [UPI, IMPS, NEFT]
+  catches: [mule_fanout]
+
+- id: payee_fwd_ratio_1h
+  version: 1
+  description: "sum(out)/sum(in) minute buckets, guarded (docs/02 §5.4)"
+  requires_keys: ["c:{b:<acct>}:in:m", "c:{b:<acct>}:out:m"]
+  provenance: B
+  monotone: increasing
+  guard: "inflow >= 100 minor and fwd_sample_n >= 3"
+  rails: [UPI, IMPS, NEFT]
+  catches: [mule_fanout]
+
+- id: payee_inflow_concentration
+  version: 1
+  description: "HHI over payer share of 24h inflow — separates merchant from ring collector"
+  requires_keys: ["hh:{b:<acct>}:in24h"]
+  provenance: B
+  monotone: decreasing
+  rails: [UPI, IMPS, NEFT]
+  catches: [mule_fanout]
+
+- id: payee_distinct_payer_banks_1h
+  version: 1
+  description: "distinct participant ids paying this payee in 1h"
+  requires_keys: ["w:{b:<acct>}:payers"]
+  provenance: B
+  monotone: increasing
+  rails: [UPI, IMPS, NEFT]
+  catches: [mule_fanout]
+
+- id: device_is_new_to_payer
+  version: 1
+  description: "NOT SISMEMBER s:{p}:devices. NA if no device_id."
+  requires_keys: ["s:{p:<acct>}:devices"]
+  provenance: A
+  monotone: increasing
+  na_when: ["device_id absent"]
+  rails: [UPI, IMPS, NEFT]
+  catches: [ato]
+
+- id: device_first_seen_hours
+  version: 1
+  description: "server-derived. Claim ignored. NA if device_id absent."
+  requires_keys: ["f:{d:<id>}:first_seen"]
+  provenance: A
+  monotone: decreasing
+  na_when: ["device_id absent"]
+  rails: [UPI, IMPS, NEFT]
+  catches: [ato]
+
+- id: device_acct_degree_24h
+  version: 1
+  description: "ZCOUNT w:{d}:accts 24h"
+  requires_keys: ["w:{d:<id>}:accts"]
+  provenance: B
+  monotone: increasing
+  na_when: ["device_id absent"]
+  rails: [UPI, IMPS, NEFT]
+  catches: [device_farming]
+
+- id: asn_is_new_to_payer
+  version: 1
+  description: "NOT SISMEMBER s:{p}:asns. NA if asn absent."
+  requires_keys: ["s:{p:<acct>}:asns"]
+  provenance: A
+  monotone: increasing
+  na_when: ["asn absent"]
+  rails: [UPI, IMPS, NEFT]
+  catches: [ato]
+
+- id: asn_acct_degree_1h
+  version: 1
+  description: "ZCOUNT w:asn:<asn>:accts 1h"
+  requires_keys: ["w:asn:<asn>:accts"]
+  provenance: B
+  monotone: increasing
+  na_when: ["asn absent"]
+  rails: [UPI, IMPS, NEFT]
+  catches: [device_farming]
+
+- id: geo_jump_kmh
+  version: 1
+  description: "haversine(last_geo, geo) / max(dt,60s), guarded (docs/02 §5.5)"
+  requires_keys: ["l:{p:<acct>}"]
+  provenance: A
+  monotone: increasing
+  guard: "both geo cells present, distinct, resolution <= 25km"
+  rails: [UPI, IMPS, NEFT]
+  catches: [ato]
+
+- id: cold_start_features_n
+  version: 1
+  description: "count of NOT_EVALUATED/NOT_APPLICABLE features on this vector (docs/02 §5.6)"
+  requires_keys: []
+  provenance: C
+  monotone: ""
+  rails: [UPI, IMPS, NEFT, CARD_CNP, CARD_CP]
+  catches: [cold_start]

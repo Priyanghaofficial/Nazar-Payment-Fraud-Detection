@@ -1,0 +1,816 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Nazar — Design System</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --canvas:#F7F8FA;--panel:#FFF;--hover:#F4F5F7;--sunken:#FAFBFC;
+  --bd:#E9EBF0;--bd2:#DFE2E9;
+  --ink:#0F172A;--ink2:#475467;--ink3:#667085;--ink4:#98A2B3;
+  --indigo:#4F46E5;--indigoh:#4338CA;--indigow:#EEF0FE;
+  --teal:#2AA3B5;--tealw:#E6F5F7;--coral:#F2695C;--coralw:#FEF0EE;--navy:#0E3D54;
+  --ok:#12805C;--okw:#E7F5F0;--warn:#B54708;--warnw:#FDF4E7;
+  --hold:#B93815;--holdw:#FDF1EC;--stop:#B42318;--stopw:#FEF1F0;
+  --sh:0 1px 2px rgba(16,24,40,.04),0 1px 3px rgba(16,24,40,.05);
+  --r:14px;--r2:10px;--r3:8px;
+  --f:"Geist","Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  --fm:"Geist Mono",ui-monospace,SFMono-Regular,monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--canvas);color:var(--ink);font-family:var(--f);font-size:14px;line-height:20px;
+  -webkit-font-smoothing:antialiased;font-feature-settings:"tnum" 1}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+:focus-visible{outline:2px solid var(--indigo);outline-offset:2px;border-radius:6px}
+svg{display:block}
+.app{display:grid;grid-template-columns:240px 1fr;min-height:100vh}
+
+.side{background:var(--panel);border-right:1px solid var(--bd);padding:14px 10px;position:sticky;top:0;height:100vh;overflow-y:auto}
+.brand{display:flex;align-items:center;gap:10px;padding:6px 10px 18px}
+.brand .lg{width:32px;height:32px;border-radius:10px;background:var(--indigo);display:grid;place-items:center;flex:none}
+.brand .lg svg{width:17px;height:17px}
+.brand b{font-size:15px;font-weight:600;letter-spacing:-.015em;display:block;line-height:18px}
+.brand em{font-style:normal;font-size:11.5px;color:var(--ink4);line-height:14px}
+.ng{font-size:11px;font-weight:500;color:var(--ink4);padding:13px 12px 5px}
+.nav{display:flex;align-items:center;gap:11px;padding:7px 12px;border-radius:var(--r2);color:var(--ink2);
+  font-size:13.5px;width:100%;text-align:left;margin-bottom:1px;line-height:22px}
+.nav svg{width:17px;height:17px;flex:none;color:var(--ink4)}
+.nav:hover{background:var(--hover)}
+.nav.on{background:var(--indigow);color:var(--indigo);font-weight:500}
+.nav.on svg{color:var(--indigo)}
+.nav .c{margin-left:auto;font-size:11px;font-weight:500;background:var(--hover);color:var(--ink3);padding:0 7px;border-radius:99px}
+.nav.on .c{background:#fff;color:var(--indigo)}
+
+.top{display:flex;align-items:center;gap:14px;padding:12px 26px;background:var(--panel);
+  border-bottom:1px solid var(--bd);position:sticky;top:0;z-index:20}
+.search{flex:1;max-width:480px;display:flex;align-items:center;gap:9px;background:var(--sunken);
+  border:1px solid var(--bd);border-radius:99px;padding:7px 14px;color:var(--ink4);font-size:13px}
+.search svg{width:15px;height:15px}
+.kbd{margin-left:auto;display:flex;gap:3px}
+.kbd i{font-style:normal;font-size:10.5px;background:var(--panel);border:1px solid var(--bd);border-radius:5px;padding:0 5px;color:var(--ink4);line-height:17px}
+.tr{margin-left:auto;display:flex;align-items:center;gap:8px}
+.ib{width:33px;height:33px;border-radius:99px;display:grid;place-items:center;color:var(--ink3)}
+.ib:hover{background:var(--hover)}
+.ib svg{width:17px;height:17px}
+.av{width:31px;height:31px;border-radius:99px;background:linear-gradient(135deg,#6366F1,#8B5CF6);display:grid;place-items:center;color:#fff;font-size:11.5px;font-weight:600}
+
+.page{padding:24px 26px 56px;max-width:1560px}
+.screen{display:none}.screen.on{display:block}
+.ph{display:flex;align-items:center;gap:14px;margin-bottom:18px;flex-wrap:wrap}
+.ph h1{font-size:25px;line-height:30px;font-weight:600;letter-spacing:-.025em}
+.ph p{color:var(--ink3);font-size:13px;margin-top:2px}
+.ph .sp{flex:1}
+.mn{font-family:var(--fm);font-size:12px}
+.pill{display:inline-flex;align-items:center;gap:7px;border-radius:99px;padding:7px 15px;font-size:13px;
+  font-weight:500;border:1px solid var(--bd2);background:var(--panel);color:var(--ink);line-height:20px}
+.pill:hover{background:var(--hover)}
+.pill svg{width:15px;height:15px}
+.pill.pri{background:var(--indigo);border-color:var(--indigo);color:#fff}
+.pill.pri:hover{background:var(--indigoh)}
+.pill.dan{border-color:#F0BDB8;color:var(--stop)}
+.pill.sm{padding:5px 12px;font-size:12.5px}
+.pill.gh{border-color:transparent;background:var(--hover);color:var(--ink2)}
+.pill.gh.on{background:var(--indigo);color:#fff}
+
+.card{background:var(--panel);border:1px solid var(--bd);border-radius:var(--r);box-shadow:var(--sh)}
+.ch{display:flex;align-items:center;gap:9px;padding:15px 18px 13px}
+.ch h2{font-size:15px;font-weight:600;letter-spacing:-.014em}
+.ch .sp{flex:1}
+.ch .ci{width:16px;height:16px;color:var(--ink4)}
+.badge{font-size:11px;font-weight:500;padding:1px 8px;border-radius:99px;background:#FEF7E6;color:#B54708;line-height:18px}
+.badge.i{background:var(--indigow);color:var(--indigo)}
+.badge.g{background:var(--okw);color:var(--ok)}
+.sub{font-size:12px;color:var(--ink4)}
+.bd{padding:0 18px 18px}
+.row{display:grid;gap:14px}
+.r2{grid-template-columns:repeat(2,1fr)}.r3{grid-template-columns:repeat(3,1fr)}.r4{grid-template-columns:repeat(4,1fr)}
+.sp1{display:grid;grid-template-columns:1fr 328px;gap:14px;align-items:start}
+.sp2{display:grid;grid-template-columns:1fr 1fr;gap:14px;align-items:start}
+@media(max-width:1200px){.sp1,.sp2{grid-template-columns:1fr}.r4{grid-template-columns:repeat(2,1fr)}}
+
+.mny{font-weight:600;letter-spacing:-.02em;white-space:nowrap}
+.mny sup{font-size:.62em;font-weight:500;color:var(--ink3);vertical-align:baseline;position:relative;top:-.52em;margin-left:.5px;letter-spacing:0}
+.un{font-weight:500;color:var(--ink3);letter-spacing:-.01em}
+.met{padding:15px 17px 13px}
+.met .lb{font-size:12.5px;color:var(--ink3);display:flex;align-items:center;gap:7px;line-height:18px}
+.met .lb svg{width:15px;height:15px;color:var(--ink4)}
+.met .vl{font-size:27px;line-height:34px;margin-top:6px}
+.met .vl .un{font-size:16px}
+.met .ft{display:flex;align-items:flex-end;gap:10px;margin-top:6px}
+.met .dd{font-size:12px;color:var(--ink3);line-height:16px;flex:1}
+.met .dd b{font-weight:500}
+.up{color:var(--ok)}.dn{color:var(--stop)}
+.big{font-size:33px;line-height:40px;letter-spacing:-.028em}
+.xax{display:flex;justify-content:space-between;padding:0 20px 2px;font-size:11px;color:var(--ink4)}
+
+table{width:100%;border-collapse:collapse}
+thead th{background:var(--sunken);font-size:11.5px;font-weight:500;color:var(--ink3);text-align:left;
+  padding:8px 18px;border-top:1px solid var(--bd);border-bottom:1px solid var(--bd);white-space:nowrap;line-height:18px}
+thead th.r{text-align:right}
+thead th span{display:inline-flex;align-items:center;gap:4px}
+thead th svg{width:11px;height:11px;color:var(--ink4)}
+tbody td{padding:9px 18px;border-bottom:1px solid var(--bd);font-size:13.5px;color:var(--ink2);vertical-align:middle;line-height:18px}
+tbody td.r{text-align:right}
+tbody tr:last-child td{border-bottom:0}
+tbody tr{cursor:pointer}
+tbody tr:hover{background:var(--sunken)}
+tbody tr.sel{background:var(--indigow)}
+.ts{font-family:var(--fm);font-size:12px;color:var(--ink4);white-space:nowrap}
+.id{font-family:var(--fm);font-size:12px;color:var(--ink3)}
+.amt{font-size:14px;color:var(--ink)}
+.lnk{color:#DC6803;font-weight:500;font-size:12.5px}
+.ent{display:flex;align-items:center;gap:9px;min-width:0}
+.ent .av2{width:29px;height:29px;border-radius:99px;display:grid;place-items:center;flex:none;font-size:10.5px;font-weight:600;color:#fff;line-height:1}
+.ent .tx{min-width:0;display:flex;flex-direction:column}
+.ent .nm{font-weight:500;color:var(--ink);font-size:13.5px;line-height:17px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ent .sc{font-size:11px;line-height:14px;color:var(--ink4);font-family:var(--fm)}
+.tag{display:inline-flex;font-size:11px;font-weight:500;color:var(--ink3);background:var(--hover);border-radius:5px;padding:1px 6px;line-height:17px}
+
+.st{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:500;padding:2px 9px;border-radius:99px;white-space:nowrap;line-height:18px}
+.st i{width:6px;height:6px;border-radius:99px;flex:none}
+.s-ok{background:var(--okw);color:var(--ok)}.s-ok i{background:var(--ok)}
+.s-wn{background:var(--warnw);color:var(--warn)}.s-wn i{background:var(--warn)}
+.s-hd{background:var(--holdw);color:var(--hold)}.s-hd i{background:var(--hold)}
+.s-sp{background:var(--stopw);color:var(--stop)}.s-sp i{background:var(--stop)}
+.s-nt{background:var(--hover);color:var(--ink3)}.s-nt i{background:var(--ink4)}
+.s-in{background:var(--indigow);color:var(--indigo)}.s-in i{background:var(--indigo)}
+
+.lr2{display:flex;align-items:center;gap:11px;padding:10px 18px;border-top:1px solid var(--bd)}
+.lr2:hover{background:var(--sunken)}
+.lr2 .ic{width:30px;height:30px;border-radius:99px;background:var(--sunken);border:1px solid var(--bd);display:grid;place-items:center;flex:none;color:var(--ink3)}
+.lr2 .ic svg{width:14px;height:14px}
+.lr2 .t{font-size:13.5px;font-weight:500;line-height:18px}
+.lr2 .s{font-size:11.5px;color:var(--ink4);line-height:15px}
+.lr2 .v{margin-left:auto;font-size:14px;text-align:right}
+
+.lad{padding:2px 18px 16px}
+.lr3{display:flex;align-items:center;gap:10px;padding:5px 0;font-size:13px;color:var(--ink4);line-height:19px}
+.lr3 .p{width:9px;height:9px;border-radius:99px;border:1.5px solid var(--bd2);flex:none}
+.lr3.on{color:var(--ink);font-weight:600}
+.lr3.on .p{background:var(--indigo);border-color:var(--indigo);box-shadow:0 0 0 3.5px var(--indigow)}
+.lr3 .tg{margin-left:auto;font-size:10.5px;color:var(--indigo);background:var(--indigow);border-radius:5px;padding:0 6px;font-weight:500;line-height:17px}
+.ceil{display:flex;align-items:center;gap:8px;margin:4px 0;font-size:10.5px;color:var(--ink4);font-weight:500}
+.ceil:before,.ceil:after{content:"";flex:1;border-top:1px dashed var(--bd2)}
+.offl{display:flex;gap:7px;margin-top:11px;padding-top:12px;border-top:1px solid var(--bd)}
+
+.wf{display:flex;flex-direction:column;gap:8px;padding:2px 18px 18px}
+.wfb{display:flex;align-items:center;gap:9px;padding:9px 13px;border-radius:var(--r2);font-size:13px;font-weight:500;color:#fff;text-align:left;width:100%;line-height:20px}
+.wfb svg{width:15px;height:15px;flex:none}
+.wfb:hover{filter:brightness(.93)}
+.w1{background:var(--indigo)}.w2{background:#5C9E31}.w3{background:var(--navy)}.w4{background:#7A8B3D}.w5{background:var(--coral)}
+.meta{padding:0 18px 14px;display:flex;flex-direction:column;gap:9px}
+.meta .kv{display:flex;gap:10px;font-size:13px;line-height:19px}
+.meta .k{color:var(--ink3);width:88px;flex:none}
+.meta .v{font-weight:500}
+.cmt{margin:0 18px 14px;border:1px solid var(--bd);border-radius:var(--r2);padding:10px 12px;font-size:13px;color:var(--ink4);background:var(--sunken)}
+
+.gw{padding:4px 10px 14px;position:relative}
+.gt{position:absolute;right:18px;top:6px;display:flex;flex-direction:column;gap:5px}
+.gt button{width:30px;height:30px;border:1px solid var(--bd);border-radius:var(--r3);background:var(--panel);display:grid;place-items:center;color:var(--ink3);box-shadow:var(--sh)}
+.gt svg{width:14px;height:14px}
+.nl{font-size:10px;fill:var(--ink2);font-weight:500;text-anchor:middle;font-family:var(--f)}
+.el{font-size:9px;fill:#3F7A2E;font-weight:500;text-anchor:middle;font-family:var(--fm)}
+
+.chips{display:flex;flex-wrap:wrap;gap:6px;padding:0 18px 16px}
+.chip{display:inline-flex;align-items:center;gap:5px;font-size:11.5px;font-weight:500;padding:3px 9px;border-radius:99px;border:1px solid var(--bd2);color:var(--ink2);background:var(--panel);line-height:18px}
+.chip.f{border-color:#F3C79C;background:var(--warnw);color:var(--warn)}
+.chip.na{border-style:dashed;color:var(--ink4)}
+.chip.ne{color:var(--ink3);background-image:repeating-linear-gradient(45deg,var(--bd) 0 1px,transparent 1px 5px)}
+.chip u{text-decoration:none;color:var(--ink4);font-weight:400}
+
+.shap{padding:0 18px 16px;display:grid;grid-template-columns:145px 1fr 50px;gap:8px 13px;align-items:center}
+.shap .k{font-family:var(--fm);font-size:11.5px;color:var(--ink2)}
+.trk{height:7px;background:var(--hover);border-radius:99px;position:relative;overflow:hidden}
+.trk i{position:absolute;top:0;bottom:0;left:50%;background:var(--warn);border-radius:99px}
+.trk i.n{background:var(--ok)}
+.shap .v{text-align:right;font-family:var(--fm);font-size:11.5px;font-weight:500}
+
+.sc{padding:16px}
+.sc .ic{width:34px;height:34px;border-radius:var(--r2);display:grid;place-items:center;margin-bottom:11px}
+.sc .ic svg{width:17px;height:17px}
+.sc h3{font-size:14px;font-weight:600;letter-spacing:-.012em;display:flex;align-items:center;gap:8px;line-height:20px}
+.sc h3 u{text-decoration:none;font-family:var(--fm);font-size:10.5px;color:var(--ink4);border:1px solid var(--bd);border-radius:5px;padding:0 5px;font-weight:500;line-height:16px}
+.sc p{font-size:12.5px;color:var(--ink3);margin-top:6px;min-height:36px;line-height:18px}
+.sc .ft{display:flex;align-items:center;gap:9px;margin-top:12px;padding-top:11px;border-top:1px solid var(--bd)}
+.sc .ft .sp{flex:1}
+
+/* stage bars */
+.stage{display:grid;grid-template-columns:110px 1fr 62px;gap:8px 12px;align-items:center;padding:0 18px 16px;font-size:12.5px}
+.stage .k{color:var(--ink2)}
+.stage .b{height:9px;background:var(--hover);border-radius:99px;overflow:hidden}
+.stage .b i{display:block;height:100%;background:var(--indigo);border-radius:99px}
+.stage .v{text-align:right;font-family:var(--fm);font-size:12px;color:var(--ink)}
+
+/* kv grid */
+.kvg{display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid var(--bd)}
+.kvg>div{padding:14px 18px;border-right:1px solid var(--bd)}
+.kvg>div:last-child{border-right:0}
+.kvg .k{font-size:12px;color:var(--ink3);line-height:17px}
+.kvg .v{font-size:20px;line-height:27px;margin-top:2px;letter-spacing:-.02em}
+
+/* diff */
+.diff{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--bd);border-top:1px solid var(--bd)}
+.diff>div{background:var(--panel);padding:14px 18px}
+.diff h4{font-size:12px;color:var(--ink3);font-weight:500;margin-bottom:9px}
+.diff code{display:block;font-family:var(--fm);font-size:11.5px;line-height:20px;color:var(--ink2)}
+.diff code b{color:var(--ink);font-weight:500}
+
+/* PHONE */
+.phones{display:flex;gap:20px;flex-wrap:wrap;align-items:flex-start}
+.pw{width:286px}
+.pcap{font-size:12.5px;color:var(--ink3);margin-top:11px;text-align:center}
+.pcap b{display:block;color:var(--ink);font-weight:600;font-size:13.5px;margin-bottom:2px}
+.phone{width:286px;border-radius:38px;background:#0B0D12;padding:9px;box-shadow:0 12px 30px rgba(16,24,40,.16)}
+.pscr{background:#fff;border-radius:30px;overflow:hidden;height:590px;display:flex;flex-direction:column;position:relative}
+.pnotch{position:absolute;top:8px;left:50%;transform:translateX(-50%);width:86px;height:22px;background:#0B0D12;border-radius:99px;z-index:3}
+.pbar{display:flex;align-items:center;padding:11px 20px 4px;font-size:12px;font-weight:600;color:var(--ink);z-index:2}
+.pbar .sp{flex:1}
+.pbar svg{width:14px;height:14px;margin-left:4px}
+.pbody{flex:1;padding:16px 20px 20px;display:flex;flex-direction:column;overflow:hidden}
+.pnav{display:flex;align-items:center;gap:10px;margin-bottom:16px}
+.pnav .bk{width:30px;height:30px;border-radius:99px;background:var(--hover);display:grid;place-items:center;color:var(--ink2)}
+.pnav .bk svg{width:15px;height:15px}
+.pnav b{font-size:15px;font-weight:600;letter-spacing:-.015em}
+.plab{font-size:12.5px;color:var(--ink3)}
+.pamt{font-size:38px;line-height:46px;font-weight:600;letter-spacing:-.03em;margin:2px 0}
+.pamt sup{font-size:.5em;top:-.6em;position:relative;vertical-align:baseline;color:var(--ink3);font-weight:500}
+.pcard{border:1px solid var(--bd);border-radius:var(--r);padding:13px;margin-top:14px;background:var(--sunken)}
+.pcard.w{background:var(--warnw);border-color:#F3D2A8}
+.pcard .rowx{display:flex;align-items:center;gap:10px}
+.pcard .avx{width:36px;height:36px;border-radius:99px;background:#6366F1;color:#fff;display:grid;place-items:center;font-size:13px;font-weight:600;flex:none}
+.pcard .nx{font-size:14px;font-weight:600;line-height:19px}
+.pcard .sx{font-size:12px;color:var(--ink3);font-family:var(--fm);line-height:16px}
+.pwarn h4{font-size:17px;font-weight:600;letter-spacing:-.018em;line-height:23px;margin-bottom:6px}
+.pwarn p{font-size:13.5px;line-height:20px;color:var(--ink2)}
+.wico{width:34px;height:34px;border-radius:var(--r2);background:#F7CF9B;display:grid;place-items:center;margin-bottom:10px;color:#8A5308}
+.wico svg{width:18px;height:18px}
+.pfacts{margin-top:12px;display:flex;flex-direction:column;gap:7px}
+.pfact{display:flex;gap:8px;font-size:12.5px;line-height:18px;color:var(--ink2)}
+.pfact svg{width:14px;height:14px;flex:none;margin-top:2px;color:#8A5308}
+.psp{flex:1}
+.pbtn{display:block;width:100%;border-radius:14px;padding:14px;font-size:15px;font-weight:600;
+  font-family:var(--f);text-align:center;margin-top:9px;letter-spacing:-.01em}
+.pbtn.pri{background:var(--indigo);color:#fff}
+.pbtn.dark{background:var(--ink);color:#fff}
+.pbtn.gh{background:transparent;color:var(--ink3);font-weight:500}
+.pbtn.gho{background:#fff;border:1px solid var(--bd2);color:var(--ink)}
+.otp{display:flex;gap:8px;margin:18px 0 6px}
+.otp span{flex:1;height:52px;border:1.5px solid var(--bd2);border-radius:12px;display:grid;place-items:center;
+  font-size:22px;font-weight:600;font-family:var(--fm)}
+.otp span.f{border-color:var(--indigo);background:var(--indigow);color:var(--indigo)}
+.otp span.c{border-color:var(--indigo)}
+.pok{width:62px;height:62px;border-radius:99px;background:var(--okw);display:grid;place-items:center;margin:0 auto 16px;color:var(--ok)}
+.pok svg{width:30px;height:30px}
+.pok.st{background:var(--stopw);color:var(--stop)}
+.pmid{flex:1;display:flex;flex-direction:column;justify-content:center;text-align:center}
+.pmid h4{font-size:20px;font-weight:600;letter-spacing:-.02em;margin-bottom:6px}
+.pmid p{font-size:13.5px;color:var(--ink3);line-height:20px}
+.pkeys{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;margin-top:6px}
+.pkeys b{font-size:21px;font-weight:500;text-align:center;padding:11px 0;border-radius:10px;letter-spacing:-.01em}
+.pkeys b:hover{background:var(--hover)}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<div class="app">
+
+<aside class="side">
+  <div class="brand">
+    <div class="lg"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="2.6"/></svg></div>
+    <div><b>Nazar</b><em>HDFC · Production</em></div>
+  </div>
+  <div class="ng">Operate</div>
+  <button class="nav on" data-s="live"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l3 8 4-16 3 8h4"/></svg>Live Monitor</button>
+  <button class="nav" data-s="inv"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h6l2 3h8v13H4z"/></svg>Investigation<span class="c">12</span></button>
+  <button class="nav" data-s="res"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 3v6c0 5-3.4 8.2-8 9-4.6-.8-8-4-8-9V6z"/></svg>Resilience</button>
+  <button class="nav" data-s="aud"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 007 0l3-3a5 5 0 00-7-7l-1 1"/><path d="M14 11a5 5 0 00-7 0l-3 3a5 5 0 007 7l1-1"/></svg>Audit Chain</button>
+  <div class="ng">Verify</div>
+  <button class="nav" data-s="demo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 4l14 8-14 8z"/></svg>Demo Runner</button>
+  <button class="nav" data-s="tm"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>Time Machine</button>
+  <button class="nav" data-s="ring"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="6" r="2.5"/><circle cx="18" cy="10" r="2.5"/><circle cx="9" cy="18" r="2.5"/><path d="M8.2 7.2l7.6 2M16.6 12l-6 4.4"/></svg>Graph / Ring</button>
+  <div class="ng">Govern</div>
+  <button class="nav" data-s="cal"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V9M10 20V4M16 20v-7M22 20v-4"/></svg>Calibration</button>
+  <button class="nav" data-s="lat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="13" r="8"/><path d="M12 13l4-3M9 2h6"/></svg>Latency</button>
+  <div class="ng">Customer</div>
+  <button class="nav" data-s="pay"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="2" width="12" height="20" rx="3"/><path d="M11 18h2"/></svg>Payer App</button>
+</aside>
+
+<div class="main">
+<div class="top">
+  <div class="search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>Search cases, accounts, decisions<span class="kbd"><i>⌘</i><i>K</i></span></div>
+  <div class="tr">
+    <button class="pill sm"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>New rule</button>
+    <button class="ib"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M18 8A6 6 0 006 8c0 7-3 8-3 8h18s-3-1-3-8"/><path d="M13.7 21a2 2 0 01-3.4 0"/></svg></button>
+    <div class="av">SK</div>
+  </div>
+</div>
+
+<div class="page">
+
+<!-- ═══════ 1 · LIVE MONITOR ═══════ -->
+<section class="screen on" id="live">
+  <div class="ph">
+    <div><h1>Live Monitor</h1><p>Real-time decisions streaming from <span class="mn">/v1/stream</span></p></div><div class="sp"></div>
+    <button class="pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 12a9 9 0 11-3-6.7"/><path d="M21 3v6h-6"/></svg>Last 24h</button>
+    <button class="pill pri"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 4l14 8-14 8z"/></svg>Run scenario</button>
+  </div>
+  <div class="row r4" style="margin-bottom:14px">
+    <div class="card met"><div class="lb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 3l8 3v6c0 5-3.4 8.2-8 9-4.6-.8-8-4-8-9V6z"/></svg>Value prevented</div>
+      <div class="vl mny">₹4,28,600<sup>.00</sup></div>
+      <div class="ft"><div class="dd"><b class="up">↑ ₹62,400</b> vs yesterday</div><svg width="62" height="22" viewBox="0 0 62 22"><polyline fill="none" stroke="#12805C" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" points="1,18 9,15 17,16 25,11 33,12 41,7 49,8 61,3"/></svg></div></div>
+    <div class="card met"><div class="lb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 12h4l3 8 4-16 3 8h4"/></svg>Decisions</div>
+      <div class="vl mny">1,284<span class="un"> /min</span></div>
+      <div class="ft"><div class="dd">8,660 avg TPS · 30k peak</div><svg width="62" height="22" viewBox="0 0 62 22"><polyline fill="none" stroke="#4F46E5" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" points="1,12 9,9 17,14 25,8 33,11 41,6 49,10 61,7"/></svg></div></div>
+    <div class="card met"><div class="lb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 8v5l3 2"/><circle cx="12" cy="12" r="9"/></svg>Latency p99</div>
+      <div class="vl mny">9.4<span class="un"> ms</span></div>
+      <div class="ft"><div class="dd">queue 0.1 · service 7.1 · total 9.4</div><svg width="62" height="22" viewBox="0 0 62 22"><polyline fill="none" stroke="#667085" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" points="1,10 9,12 17,9 25,13 33,10 41,11 49,9 61,10"/></svg></div></div>
+    <div class="card met"><div class="lb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 4v16h16"/><path d="M8 15l3.5-4 3 2.5L20 7"/></svg>Challenge rate</div>
+      <div class="vl mny">1.4<span class="un">%</span></div>
+      <div class="ft"><div class="dd"><b class="dn">↓ 0.3pt</b> after policy .001</div><svg width="62" height="22" viewBox="0 0 62 22"><polyline fill="none" stroke="#B54708" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" points="1,5 9,7 17,6 25,10 33,9 41,13 49,12 61,15"/></svg></div></div>
+  </div>
+
+  <div class="sp1" style="margin-bottom:14px">
+    <div class="card">
+      <div class="ch"><div><h2>Value prevented</h2><div class="big mny" style="margin-top:5px">₹4,28,600<sup>.00</sup></div>
+        <div style="display:flex;gap:14px;font-size:12.5px;color:var(--ink3);margin-top:4px"><span><b class="up">↑ ₹2.4L</b> blocked</span><span><b class="dn">↓ ₹41K</b> released</span></div></div>
+        <div class="sp"></div>
+        <div style="display:flex;gap:6px;align-self:flex-start"><button class="pill gh sm">24h</button><button class="pill gh sm on">7d</button><button class="pill gh sm">30d</button></div>
+      </div>
+      <div style="padding:2px 8px 12px">
+        <svg viewBox="0 0 760 190" style="width:100%;height:auto">
+          <defs><linearGradient id="g1" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#4F46E5" stop-opacity=".20"/><stop offset="100%" stop-color="#4F46E5" stop-opacity="0"/></linearGradient></defs>
+          <g stroke="#EFF1F5"><line x1="20" y1="40" x2="740" y2="40"/><line x1="20" y1="85" x2="740" y2="85"/><line x1="20" y1="130" x2="740" y2="130"/></g>
+          <path fill="url(#g1)" d="M20,132 44,126 68,130 92,110 116,116 140,98 164,106 188,84 212,92 236,74 260,80 284,64 308,72 332,56 356,64 380,48 404,58 428,44 452,52 476,38 500,46 524,34 548,44 572,30 596,38 620,26 644,34 668,24 692,30 716,20 740,26 L740,160 L20,160 Z"/>
+          <polyline fill="none" stroke="#4F46E5" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" points="20,132 44,126 68,130 92,110 116,116 140,98 164,106 188,84 212,92 236,74 260,80 284,64 308,72 332,56 356,64 380,48 404,58 428,44 452,52 476,38 500,46 524,34 548,44 572,30 596,38 620,26 644,34 668,24 692,30 716,20 740,26"/>
+          <circle cx="740" cy="26" r="4.5" fill="#4F46E5" stroke="#fff" stroke-width="2.5"/>
+        </svg>
+        <div class="xax"><span>Aug 8</span><span>Aug 10</span><span>Aug 12</span><span>Aug 14</span></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="ch"><h2>Session</h2><div class="sp"></div><span class="sub">since 13:41</span></div>
+      <div class="lr2"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M8 12.5l3 3 5-6"/></svg></div><div><div class="t">Allowed</div><div class="s">98.2% of volume</div></div><span class="v mny">1,261</span></div>
+      <div class="lr2"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M12 3l9 17H3z"/><path d="M12 10v4"/></svg></div><div><div class="t">Step-up</div><div class="s">interstitial shown</div></div><span class="v mny">18</span></div>
+      <div class="lr2"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 018 0v3"/></svg></div><div><div class="t">Held</div><div class="s">awaiting analyst</div></div><span class="v mny">3</span></div>
+      <div class="lr2"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M6 6l12 12"/></svg></div><div><div class="t">Blocked</div><div class="s">four-eyes approved</div></div><span class="v mny">2</span></div>
+      <div class="lr2"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M4 8h16M4 16h16"/></svg></div><div><div class="t">Capped</div><div class="s">regulatory ceiling</div></div><span class="v mny">1</span></div>
+    </div>
+  </div>
+
+  <div class="sp1">
+    <div class="card">
+      <div class="ch"><svg class="ci" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 12h4l3 8 4-16 3 8h4"/></svg><h2>Live decisions</h2><span class="badge">7 this session</span><div class="sp"></div><span class="st s-ok"><i></i>Stream open</span></div>
+      <table><thead><tr><th><span>Time <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M8 10l4-4 4 4M8 14l4 4 4-4"/></svg></span></th><th>Payer</th><th>Beneficiary</th><th>Channel</th><th class="r">Amount</th><th>Decision</th><th class="r">Total</th></tr></thead>
+        <tbody>
+          <tr><td class="ts">14:00:19.086</td><td><div class="ent"><span class="av2" style="background:#6366F1">AR</span><div class="tx"><span class="nm">Ananya R.</span><span class="sc">a3f1…9e2b</span></div></div></td><td><span class="id">7c04…11da</span></td><td><span class="tag">UPI</span></td><td class="r"><span class="mny amt">₹520<sup>.00</sup></span></td><td><span class="st s-ok"><i></i>Allowed</span></td><td class="r ts">6.0 ms</td></tr>
+          <tr><td class="ts">14:00:19.081</td><td><div class="ent"><span class="av2" style="background:#0EA5E9">VM</span><div class="tx"><span class="nm">Vikram M.</span><span class="sc">be22…40cf</span></div></div></td><td><span class="id">1d9a…8b31</span></td><td><span class="tag">UPI</span></td><td class="r"><span class="mny amt">₹12,000<sup>.00</sup></span></td><td><span class="st s-ok"><i></i>Allowed</span></td><td class="r ts">14.2 ms</td></tr>
+          <tr class="sel"><td class="ts">14:00:19.065</td><td><div class="ent"><span class="av2" style="background:#F59E0B">PK</span><div class="tx"><span class="nm">Priya K.</span><span class="sc">0e5d…2a77</span></div></div></td><td><span class="id">7c04…11da</span></td><td><span class="tag">UPI</span></td><td class="r"><span class="mny amt">₹49,999<sup>.00</sup></span></td><td><span class="st s-wn"><i></i>Step-up</span></td><td class="r ts">6.7 ms</td></tr>
+          <tr><td class="ts">14:00:19.059</td><td><div class="ent"><span class="av2" style="background:#14B8A6">RS</span><div class="tx"><span class="nm">Rahul S.</span><span class="sc">77bc…d180</span></div></div></td><td><span class="id">4a80…5e19</span></td><td><span class="tag">IMPS</span></td><td class="r"><span class="mny amt">₹8,250<sup>.00</sup></span></td><td><span class="st s-ok"><i></i>Allowed</span></td><td class="r ts">4.0 ms</td></tr>
+          <tr><td class="ts">14:00:19.055</td><td><div class="ent"><span class="av2" style="background:#8B5CF6">NG</span><div class="tx"><span class="nm">Neha G.</span><span class="sc">3e91…77ab</span></div></div></td><td><span class="id">7c04…11da</span></td><td><span class="tag">UPI</span></td><td class="r"><span class="mny amt">₹62,000<sup>.00</sup></span></td><td><span class="st s-hd"><i></i>Hold</span></td><td class="r ts">5.9 ms</td></tr>
+          <tr><td class="ts">14:00:19.048</td><td><div class="ent"><span class="av2" style="background:#EC4899">AD</span><div class="tx"><span class="nm">Arjun D.</span><span class="sc">c104…6f2e</span></div></div></td><td><span class="id">2b6e…9a04</span></td><td><span class="tag">NEFT</span></td><td class="r"><span class="mny amt">₹2,40,000<sup>.00</sup></span></td><td><span class="st s-nt"><i></i>Capped</span></td><td class="r ts">8.0 ms</td></tr>
+          <tr><td class="ts">14:00:19.030</td><td><div class="ent"><span class="av2" style="background:#64748B">MJ</span><div class="tx"><span class="nm">Meera J.</span><span class="sc">91da…03bc</span></div></div></td><td><span class="id">7c04…11da</span></td><td><span class="tag">UPI</span></td><td class="r"><span class="mny amt">₹1,20,000<sup>.00</sup></span></td><td><span class="st s-sp"><i></i>Blocked</span></td><td class="r ts">15.1 ms</td></tr>
+        </tbody></table>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:14px">
+      <div class="card"><div class="ch"><h2>Decision</h2><div class="sp"></div><span class="sub">case 40219</span></div>
+        <div class="lad"><div class="lr3"><span class="p"></span>Allow</div><div class="lr3"><span class="p"></span>Allow &amp; monitor</div><div class="lr3"><span class="p"></span>Step-up</div>
+          <div class="lr3 on"><span class="p"></span>Step-up interstitial<span class="tg">landed</span></div><div class="ceil">advisory ceiling</div><div class="lr3"><span class="p"></span>Hold</div>
+          <div class="offl"><span class="st s-nt"><i></i>Cap · regulatory</span><span class="st s-sp"><i></i>Block</span></div></div></div>
+      <div class="card"><div class="ch"><h2>Dependencies</h2><div class="sp"></div><span class="sub">3s poll</span></div>
+        <div class="lr2"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><ellipse cx="12" cy="6" rx="8" ry="3"/><path d="M4 6v12c0 1.7 3.6 3 8 3s8-1.3 8-3V6"/></svg></div><div><div class="t">Redis</div><div class="s">cluster · 6 shards</div></div><span class="st s-ok" style="margin-left:auto"><i></i>0.46 ms</span></div>
+        <div class="lr2"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><ellipse cx="12" cy="6" rx="8" ry="3"/><path d="M4 6v12c0 1.7 3.6 3 8 3s8-1.3 8-3V6"/></svg></div><div><div class="t">Postgres</div><div class="s">primary</div></div><span class="st s-ok" style="margin-left:auto"><i></i>0.21 ms</span></div>
+        <div class="lr2"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 3l8 3v6c0 5-3.4 8.2-8 9-4.6-.8-8-4-8-9V6z"/></svg></div><div><div class="t">Consortium</div><div class="s">4 members</div></div><span class="st s-wn" style="margin-left:auto"><i></i>1.1 s</span></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════ 2 · INVESTIGATION ═══════ -->
+<section class="screen" id="inv">
+  <div class="ph"><div><h1>Case 40219</h1><p>APP scam · UPI · opened 14:00:19 · exposure ₹49,999</p></div><div class="sp"></div>
+    <button class="pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 3v12M7 10l5 5 5-5M4 20h16"/></svg>Export</button>
+    <button class="pill pri"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 12a9 9 0 11-3-6.7"/><path d="M21 3v6h-6"/></svg>Run new analysis</button></div>
+  <div class="sp1">
+    <div style="display:flex;flex-direction:column;gap:14px">
+      <div class="card">
+        <div class="ch"><svg class="ci" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="6" cy="6" r="2.5"/><circle cx="18" cy="10" r="2.5"/><circle cx="9" cy="18" r="2.5"/><path d="M8.2 7.2l7.6 2M16.6 12l-6 4.4"/></svg><h2>Network analysis</h2><span class="badge">11 payers · 1 beneficiary</span><div class="sp"></div><span class="sub">ring_score 0.87</span></div>
+        <div class="gw"><div class="gt">
+          <button><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></button>
+          <button><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14"/></svg></button>
+          <button><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3"/></svg></button></div>
+          <svg viewBox="0 0 800 470" style="width:100%;height:auto">
+            <g stroke="#CFE3C4" stroke-width="1.5"><line x1="400" y1="235" x2="560" y2="235"/><line x1="400" y1="235" x2="529" y2="141"/><line x1="400" y1="235" x2="449" y2="83"/><line x1="400" y1="235" x2="351" y2="83"/><line x1="400" y1="235" x2="271" y2="141"/><line x1="400" y1="235" x2="240" y2="235"/><line x1="400" y1="235" x2="271" y2="329"/><line x1="400" y1="235" x2="351" y2="387"/><line x1="400" y1="235" x2="449" y2="387"/><line x1="400" y1="235" x2="529" y2="329"/></g>
+            <g><rect x="452" y="227" width="50" height="15" rx="4" fill="#EDF6E8"/><text class="el" x="477" y="238">₹7,500</text>
+              <rect x="438" y="177" width="50" height="15" rx="4" fill="#EDF6E8"/><text class="el" x="463" y="188">₹1,500</text>
+              <rect x="400" y="148" width="50" height="15" rx="4" fill="#EDF6E8"/><text class="el" x="425" y="159">₹1,520</text>
+              <rect x="350" y="148" width="50" height="15" rx="4" fill="#EDF6E8"/><text class="el" x="375" y="159">₹7,105</text>
+              <rect x="312" y="177" width="50" height="15" rx="4" fill="#EDF6E8"/><text class="el" x="337" y="188">₹7,611</text>
+              <rect x="298" y="227" width="50" height="15" rx="4" fill="#EDF6E8"/><text class="el" x="323" y="238">₹6,938</text>
+              <rect x="312" y="279" width="50" height="15" rx="4" fill="#EDF6E8"/><text class="el" x="337" y="290">₹3,219</text>
+              <rect x="350" y="307" width="50" height="15" rx="4" fill="#EDF6E8"/><text class="el" x="375" y="318">₹2,128</text>
+              <rect x="400" y="307" width="50" height="15" rx="4" fill="#EDF6E8"/><text class="el" x="425" y="318">₹2,473</text>
+              <rect x="438" y="279" width="50" height="15" rx="4" fill="#EDF6E8"/><text class="el" x="463" y="290">₹5,499</text></g>
+            <g><circle cx="560" cy="235" r="21" fill="#2AA3B5"/><text class="nl" x="560" y="271">Ananya R.</text>
+              <circle cx="529" cy="141" r="21" fill="#2AA3B5"/><text class="nl" x="529" y="113">Vikram M.</text>
+              <circle cx="449" cy="83" r="21" fill="#2AA3B5"/><text class="nl" x="449" y="55">Priya K.</text>
+              <circle cx="351" cy="83" r="21" fill="#2AA3B5"/><text class="nl" x="351" y="55">Rahul S.</text>
+              <circle cx="271" cy="141" r="21" fill="#2AA3B5"/><text class="nl" x="271" y="113">Neha G.</text>
+              <circle cx="240" cy="235" r="21" fill="#2AA3B5"/><text class="nl" x="240" y="271">Arjun D.</text>
+              <circle cx="271" cy="329" r="21" fill="#2AA3B5"/><text class="nl" x="271" y="365">Meera J.</text>
+              <circle cx="351" cy="387" r="21" fill="#2AA3B5"/><text class="nl" x="351" y="423">Kiran T.</text>
+              <circle cx="449" cy="387" r="21" fill="#2AA3B5"/><text class="nl" x="449" y="423">Divya N.</text>
+              <circle cx="529" cy="329" r="21" fill="#2AA3B5"/><text class="nl" x="529" y="365">Sanjay P.</text>
+              <circle cx="400" cy="235" r="28" fill="#F2695C"/><text class="nl" x="400" y="282" style="font-weight:600">7c04…11da</text></g>
+            <g fill="#fff" class="glyphs"></g>
+          </svg></div>
+      </div>
+      <div class="card">
+        <div class="ch"><svg class="ci" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 4v16h16"/><path d="M8 15l3.5-4 3 2.5L20 7"/></svg><h2>Why this fired</h2><div class="sp"></div><span class="sub">TreeSHAP · upi-v1.4</span></div>
+        <div class="shap">
+          <span class="k">payee_fanin_24h</span><div class="trk"><i style="width:31%"></i></div><span class="v">+0.94</span>
+          <span class="k">payee_fwd_ratio_1h</span><div class="trk"><i style="width:24%"></i></div><span class="v">+0.71</span>
+          <span class="k">amt_over_p95</span><div class="trk"><i style="width:17%"></i></div><span class="v">+0.52</span>
+          <span class="k">pair_first_added_h</span><div class="trk"><i style="width:11%"></i></div><span class="v">+0.33</span>
+          <span class="k">payer_tenure_days</span><div class="trk"><i class="n" style="left:42%;width:8%"></i></div><span class="v">−0.24</span></div>
+        <div class="chips"><span class="chip f">▲ payee_fanin_24h</span><span class="chip f">▲ payee_fwd_ratio_1h</span><span class="chip">✓ device_new</span><span class="chip na">— geo_velocity <u>· imps</u></span><span class="chip ne">○ pair_amt_ratio_p95 <u>· cold start</u></span></div>
+      </div>
+      <div class="card"><div class="ch"><svg class="ci" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5"/></svg><h2>Linked transactions</h2><span class="badge">11</span></div>
+        <table><thead><tr><th class="r"><span>Amount <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M8 10l4-4 4 4M8 14l4 4 4-4"/></svg></span></th><th>Payer</th><th>Channel</th><th>Decision</th><th class="r">Links</th></tr></thead><tbody>
+          <tr><td class="r"><span class="mny amt">₹7,500<sup>.00</sup></span></td><td><div class="ent"><span class="av2" style="background:#6366F1">AR</span><div class="tx"><span class="nm">Ananya R.</span><span class="sc">a3f1…9e2b</span></div></div></td><td><span class="tag">UPI</span></td><td><span class="st s-ok"><i></i>Allowed</span></td><td class="r"><span class="lnk">3 links</span></td></tr>
+          <tr><td class="r"><span class="mny amt">₹1,500<sup>.00</sup></span></td><td><div class="ent"><span class="av2" style="background:#0EA5E9">VM</span><div class="tx"><span class="nm">Vikram M.</span><span class="sc">be22…40cf</span></div></div></td><td><span class="tag">UPI</span></td><td><span class="st s-ok"><i></i>Allowed</span></td><td class="r"><span class="lnk">2 links</span></td></tr>
+          <tr><td class="r"><span class="mny amt">₹49,999<sup>.00</sup></span></td><td><div class="ent"><span class="av2" style="background:#F59E0B">PK</span><div class="tx"><span class="nm">Priya K.</span><span class="sc">0e5d…2a77</span></div></div></td><td><span class="tag">UPI</span></td><td><span class="st s-wn"><i></i>Step-up</span></td><td class="r"><span class="lnk">5 links</span></td></tr>
+          <tr><td class="r"><span class="mny amt">₹7,105<sup>.00</sup></span></td><td><div class="ent"><span class="av2" style="background:#14B8A6">RS</span><div class="tx"><span class="nm">Rahul S.</span><span class="sc">77bc…d180</span></div></div></td><td><span class="tag">IMPS</span></td><td><span class="st s-ok"><i></i>Allowed</span></td><td class="r"><span class="lnk">1 link</span></td></tr>
+          <tr><td class="r"><span class="mny amt">₹6,938<sup>.00</sup></span></td><td><div class="ent"><span class="av2" style="background:#EC4899">AD</span><div class="tx"><span class="nm">Arjun D.</span><span class="sc">c104…6f2e</span></div></div></td><td><span class="tag">UPI</span></td><td><span class="st s-hd"><i></i>Hold</span></td><td class="r"><span class="lnk">4 links</span></td></tr>
+        </tbody></table></div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:14px">
+      <div class="card"><div class="ch"><h2>Case</h2><div class="sp"></div><span class="st s-wn"><i></i>Open</span></div>
+        <div class="meta"><div class="kv"><span class="k">Assigned</span><span class="v">S. Kumar</span></div><div class="kv"><span class="k">Queue</span><span class="v">APP scam · L1</span></div><div class="kv"><span class="k">Exposure</span><span class="v mny">₹49,999<sup>.00</sup></span></div><div class="kv"><span class="k">SLA</span><span class="v" style="color:var(--warn)">14 min left</span></div></div>
+        <div class="wf">
+          <button class="wfb w1"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 19V5M6 11l6-6 6 6"/></svg>Escalate to L2</button>
+          <button class="wfb w2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M8 12.5l3 3 5-6"/></svg>False positive · dismiss</button>
+          <button class="wfb w3"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 018 0v3"/></svg>Freeze beneficiary</button>
+          <button class="wfb w4"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>Silence for 30 days</button>
+          <button class="wfb w5"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg>Confirm fraud</button></div></div>
+      <div class="card"><div class="ch"><h2>Decision</h2></div>
+        <div class="lad"><div class="lr3"><span class="p"></span>Allow</div><div class="lr3"><span class="p"></span>Allow &amp; monitor</div><div class="lr3"><span class="p"></span>Step-up</div><div class="lr3 on"><span class="p"></span>Step-up interstitial<span class="tg">landed</span></div><div class="ceil">advisory ceiling</div><div class="lr3"><span class="p"></span>Hold</div><div class="offl"><span class="st s-nt"><i></i>Cap</span><span class="st s-sp"><i></i>Block</span></div></div></div>
+      <div class="card"><div class="ch"><h2>Comments</h2></div><div class="cmt">Mention teammates with @name</div><div style="padding:0 18px 16px;display:flex;justify-content:flex-end"><button class="pill sm pri">Add comment</button></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════ 3 · RESILIENCE ═══════ -->
+<section class="screen" id="res">
+  <div class="ph"><div><h1>Resilience</h1><p>Dependency status via <span class="mn">/v1/resilience</span>, polled every 3s. Chaos controls stop and start the real container.</p></div><div class="sp"></div>
+    <button class="pill dan"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M6 6l12 12"/></svg>Kill Redis</button>
+    <button class="pill pri"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 12a9 9 0 11-3-6.7"/><path d="M21 3v6h-6"/></svg>Restore Redis</button></div>
+  <div class="row r3" style="margin-bottom:14px">
+    <div class="card met"><div class="lb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><ellipse cx="12" cy="6" rx="8" ry="3"/><path d="M4 6v12c0 1.7 3.6 3 8 3s8-1.3 8-3V6"/></svg>Redis</div><div class="vl mny">0.46<span class="un"> ms</span></div><div class="ft"><div class="dd">cluster · 6 shards · 0 evictions</div><span class="st s-ok"><i></i>Up</span></div></div>
+    <div class="card met"><div class="lb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><ellipse cx="12" cy="6" rx="8" ry="3"/><path d="M4 6v12c0 1.7 3.6 3 8 3s8-1.3 8-3V6"/></svg>Postgres</div><div class="vl mny">0.21<span class="un"> ms</span></div><div class="ft"><div class="dd">primary · WAL lag 0.0s</div><span class="st s-ok"><i></i>Up</span></div></div>
+    <div class="card met"><div class="lb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 3l8 3v6c0 5-3.4 8.2-8 9-4.6-.8-8-4-8-9V6z"/></svg>Consortium</div><div class="vl mny">1.1<span class="un"> s</span></div><div class="ft"><div class="dd">4 members · filter age 1.1s</div><span class="st s-wn"><i></i>Stale</span></div></div>
+  </div>
+  <div class="sp2" style="margin-bottom:14px">
+    <div class="card"><div class="ch"><h2>Degradation ladder</h2><div class="sp"></div><span class="st s-ok"><i></i>D0 · healthy</span></div>
+      <div class="lad">
+        <div class="lr3 on"><span class="p"></span>D0 · all lanes live<span class="tg">current</span></div>
+        <div class="lr3"><span class="p"></span>D1 · consortium stale, advisory capped</div>
+        <div class="lr3"><span class="p"></span>D2 · graph lane shed</div>
+        <div class="lr3"><span class="p"></span>D3 · model lane shed, rails only</div>
+        <div class="lr3"><span class="p"></span>D4 · value capped at ₹2,000</div>
+        <div class="ceil">no BLOCK below this line</div>
+        <div class="lr3"><span class="p"></span>D5 · static allow, log only</div>
+      </div></div>
+    <div class="card"><div class="ch"><h2>Shed &amp; caps</h2><div class="sp"></div><span class="sub">rolling 60s</span></div>
+      <div class="kvg" style="grid-template-columns:repeat(3,1fr)">
+        <div><div class="k">Async shed</div><div class="v mny">0</div></div>
+        <div><div class="k">Queue depth</div><div class="v mny">0</div></div>
+        <div><div class="k">Value cap</div><div class="v mny">₹2,000<sup>.00</sup></div></div>
+      </div>
+      <div class="bd" style="padding-top:14px"><div class="stage" style="padding:0">
+        <span class="k">Concurrency</span><div class="b"><i style="width:34%"></i></div><span class="v">34%</span>
+        <span class="k">Deadline budget</span><div class="b"><i style="width:22%"></i></div><span class="v">22%</span>
+      </div></div></div>
+  </div>
+  <div class="card"><div class="ch"><h2>Event log</h2><div class="sp"></div><span class="sub">last 30 min</span></div>
+    <table><thead><tr><th>Time</th><th>Event</th><th>Lane</th><th>State</th></tr></thead><tbody>
+      <tr><td class="ts">13:58:41.220</td><td>Redis restored · pool re-established</td><td><span class="tag">store</span></td><td><span class="st s-ok"><i></i>Healthy</span></td></tr>
+      <tr><td class="ts">13:58:12.004</td><td>Rails-only decisioning · value capped ₹2,000</td><td><span class="tag">decision</span></td><td><span class="st s-nt"><i></i>Degraded D4</span></td></tr>
+      <tr><td class="ts">13:58:11.887</td><td>Redis unreachable · 3 consecutive probe failures</td><td><span class="tag">store</span></td><td><span class="st s-nt"><i></i>Degraded D3</span></td></tr>
+      <tr><td class="ts">13:52:07.410</td><td>Consortium filter refresh exceeded 1s budget</td><td><span class="tag">consortium</span></td><td><span class="st s-wn"><i></i>Stale</span></td></tr>
+      <tr><td class="ts">13:41:02.330</td><td>Policy bundle 2026-08-14.001 loaded</td><td><span class="tag">policy</span></td><td><span class="st s-ok"><i></i>Healthy</span></td></tr>
+    </tbody></table></div>
+</section>
+
+<!-- ═══════ 4 · AUDIT CHAIN ═══════ -->
+<section class="screen" id="aud">
+  <div class="ph"><div><h1>Audit Chain</h1><p>Every decision hashed into an append-only chain. Verification walks from genesis.</p></div><div class="sp"></div>
+    <button class="pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 3v12M7 10l5 5 5-5M4 20h16"/></svg>Export proof</button>
+    <button class="pill pri"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M8 12.5l3 3 5-6"/></svg>Verify chain</button></div>
+  <div class="row r4" style="margin-bottom:14px">
+    <div class="card met"><div class="lb">Chain height</div><div class="vl mny">40,219</div><div class="ft"><div class="dd">since 2026-08-01</div></div></div>
+    <div class="card met"><div class="lb">Last verified</div><div class="vl mny">14:00<span class="un">:19</span></div><div class="ft"><div class="dd">full walk · 1.8s</div><span class="st s-ok"><i></i>Valid</span></div></div>
+    <div class="card met"><div class="lb">Broken links</div><div class="vl mny">0</div><div class="ft"><div class="dd">across 40,219 entries</div></div></div>
+    <div class="card met"><div class="lb">Writers</div><div class="vl mny">1</div><div class="ft"><div class="dd">single-writer at P0</div></div></div>
+  </div>
+  <div class="card" style="margin-bottom:14px"><div class="ch"><h2>Root</h2><div class="sp"></div><span class="st s-ok"><i></i>Chain verified</span></div>
+    <div class="kvg" style="grid-template-columns:1fr 1fr">
+      <div><div class="k">Merkle root</div><div class="mn" style="margin-top:4px;color:var(--ink);font-size:12.5px">8f21c4a3f19c4e2b7d0e…a9b3f1</div></div>
+      <div><div class="k">Signed by</div><div class="mn" style="margin-top:4px;color:var(--ink);font-size:12.5px">nazar-prod-01 · ed25519</div></div>
+    </div></div>
+  <div class="card"><div class="ch"><h2>Entries</h2><div class="sp"></div><span class="sub">newest first</span></div>
+    <table><thead><tr><th>Seq</th><th>Time</th><th>Decision</th><th>Prev hash</th><th>Hash</th><th class="r">Link</th></tr></thead><tbody>
+      <tr><td class="mn">40219</td><td class="ts">14:00:19.065</td><td><span class="st s-wn"><i></i>Step-up</span></td><td class="id">4e2b…1f09</td><td class="id">a3f1…9e2b</td><td class="r"><span class="st s-ok"><i></i>OK</span></td></tr>
+      <tr><td class="mn">40218</td><td class="ts">14:00:19.059</td><td><span class="st s-ok"><i></i>Allowed</span></td><td class="id">c602…7710</td><td class="id">4e2b…1f09</td><td class="r"><span class="st s-ok"><i></i>OK</span></td></tr>
+      <tr><td class="mn">40217</td><td class="ts">14:00:19.055</td><td><span class="st s-hd"><i></i>Hold</span></td><td class="id">9f13…2a77</td><td class="id">c602…7710</td><td class="r"><span class="st s-ok"><i></i>OK</span></td></tr>
+      <tr><td class="mn">40216</td><td class="ts">14:00:19.048</td><td><span class="st s-nt"><i></i>Capped</span></td><td class="id">2b6e…9a04</td><td class="id">9f13…2a77</td><td class="r"><span class="st s-ok"><i></i>OK</span></td></tr>
+      <tr><td class="mn">40215</td><td class="ts">14:00:19.030</td><td><span class="st s-sp"><i></i>Blocked</span></td><td class="id">91da…03bc</td><td class="id">2b6e…9a04</td><td class="r"><span class="st s-ok"><i></i>OK</span></td></tr>
+      <tr><td class="mn">40214</td><td class="ts">14:00:18.994</td><td><span class="st s-ok"><i></i>Allowed</span></td><td class="id">77bc…d180</td><td class="id">91da…03bc</td><td class="r"><span class="st s-ok"><i></i>OK</span></td></tr>
+    </tbody></table></div>
+</section>
+
+<!-- ═══════ 5 · DEMO RUNNER ═══════ -->
+<section class="screen" id="demo">
+  <div class="ph"><div><h1>Demo Runner</h1><p>Each scenario fires through the real decision path. Scenario E kills and restores Redis for real.</p></div><div class="sp"></div>
+    <button class="pill pri"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 4l14 8-14 8z"/></svg>Run all</button></div>
+  <div class="row r4">
+    <div class="card sc"><div class="ic" style="background:var(--okw);color:var(--ok)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M8 12.5l3 3 5-6"/></svg></div><h3><u>A</u>Normal</h3><p>An ordinary transaction between two established accounts.</p><div class="ft"><span class="st s-ok"><i></i>Allow</span><div class="sp"></div><button class="pill sm">Run</button></div></div>
+    <div class="card sc"><div class="ic" style="background:var(--warnw);color:var(--warn)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 3l9 17H3z"/><path d="M12 10v4M12 17h.01"/></svg></div><h3><u>B</u>APP scam</h3><p>New beneficiary with fan-in and rapid forwarding.</p><div class="ft"><span class="st s-wn"><i></i>Step-up</span><div class="sp"></div><button class="pill sm">Run</button></div></div>
+    <div class="card sc"><div class="ic" style="background:var(--tealw);color:var(--teal)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="6" cy="6" r="2.5"/><circle cx="18" cy="10" r="2.5"/><circle cx="9" cy="18" r="2.5"/><path d="M8.2 7.2l7.6 2M16.6 12l-6 4.4"/></svg></div><h3><u>C</u>Mule fan-out</h3><p>Eleven payers into one beneficiary that forwards within the minute.</p><div class="ft"><span class="st s-hd"><i></i>Ring evidence</span><div class="sp"></div><button class="pill sm">Run</button></div></div>
+    <div class="card sc"><div class="ic" style="background:var(--hover);color:var(--ink3)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 8h16M4 16h16"/></svg></div><h3><u>D</u>Large new payee</h3><p>High-value payment to a first-time beneficiary, above the ceiling.</p><div class="ft"><span class="st s-nt"><i></i>Cap</span><div class="sp"></div><button class="pill sm">Run</button></div></div>
+    <div class="card sc"><div class="ic" style="background:var(--coralw);color:var(--coral)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M13 2L4 14h7l-1 8 9-12h-7z"/></svg></div><h3><u>E</u>Redis killed</h3><p>The store dies mid-flight. The system still answers and never blocks.</p><div class="ft"><span class="st s-nt"><i></i>Degraded</span><div class="sp"></div><button class="pill sm">Run</button></div></div>
+    <div class="card sc"><div class="ic" style="background:var(--okw);color:var(--ok)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 21V8l9-5 9 5v13"/><path d="M9 21v-7h6v7"/></svg></div><h3><u>F</u>Legit merchant</h3><p>Thirty payers to one genuine merchant. Ring score must stay zero.</p><div class="ft"><span class="st s-ok"><i></i>ring_score 0</span><div class="sp"></div><button class="pill sm">Run</button></div></div>
+    <div class="card sc"><div class="ic" style="background:var(--indigow);color:var(--indigo)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 12a9 9 0 11-3-6.7"/><path d="M21 3v6h-6"/></svg></div><h3><u>G</u>Round-trip</h3><p>A persisted decision is re-read and compared byte-for-byte.</p><div class="ft"><span class="st s-ok"><i></i>Byte-identical</span><div class="sp"></div><button class="pill sm">Run</button></div></div>
+    <div class="card sc"><div class="ic" style="background:var(--indigow);color:var(--indigo)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M10 13a5 5 0 007 0l3-3a5 5 0 00-7-7l-1 1"/><path d="M14 11a5 5 0 00-7 0l-3 3a5 5 0 007 7l1-1"/></svg></div><h3><u>H</u>Audit chain</h3><p>Walks the hash chain from genesis and verifies every link.</p><div class="ft"><span class="st s-ok"><i></i>Verified</span><div class="sp"></div><button class="pill sm">Run</button></div></div>
+  </div>
+</section>
+
+<!-- ═══════ 6 · TIME MACHINE ═══════ -->
+<section class="screen" id="tm">
+  <div class="ph"><div><h1>Time Machine</h1><p>Replay any decision from persisted features. Replay is a read, never a recompute.</p></div><div class="sp"></div>
+    <button class="pill"><span class="mn">case 40219</span></button>
+    <button class="pill pri"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 4l14 8-14 8z"/></svg>Replay</button></div>
+  <div class="card" style="margin-bottom:14px"><div class="ch"><h2>Replay result</h2><div class="sp"></div><span class="st s-ok"><i></i>Byte-identical · 34 / 34 features match</span></div>
+    <div class="kvg" style="grid-template-columns:repeat(4,1fr)">
+      <div><div class="k">Decided at</div><div class="v mny">14:00<span class="un">:19.065</span></div></div>
+      <div><div class="k">Replayed at</div><div class="v mny">14:22<span class="un">:04.881</span></div></div>
+      <div><div class="k">Model bundle</div><div class="v mn" style="font-size:15px">upi-v1.4</div></div>
+      <div><div class="k">Policy</div><div class="v mn" style="font-size:15px">2026-08-14.001</div></div>
+    </div></div>
+  <div class="card" style="margin-bottom:14px"><div class="ch"><h2>Feature vector</h2><div class="sp"></div><span class="badge g">no drift</span></div>
+    <div class="diff">
+      <div><h4>Persisted at decision time</h4>
+        <code>payee_fanin_24h        <b>11</b></code><code>payee_fwd_ratio_1h     <b>0.94</b></code><code>amt_over_p95           <b>3.20</b></code><code>pair_first_added_h     <b>72</b></code><code>payer_tenure_days      <b>1,204</b></code><code>device_new             <b>false</b></code><code>geo_velocity           <b>n/a</b></code></div>
+      <div><h4>Recomputed from the same read</h4>
+        <code>payee_fanin_24h        <b>11</b></code><code>payee_fwd_ratio_1h     <b>0.94</b></code><code>amt_over_p95           <b>3.20</b></code><code>pair_first_added_h     <b>72</b></code><code>payer_tenure_days      <b>1,204</b></code><code>device_new             <b>false</b></code><code>geo_velocity           <b>n/a</b></code></div>
+    </div></div>
+  <div class="card"><div class="ch"><h2>Replay history</h2></div>
+    <table><thead><tr><th>Case</th><th>Replayed</th><th>Features</th><th>Original</th><th>Replayed decision</th><th class="r">Result</th></tr></thead><tbody>
+      <tr><td class="mn">40219</td><td class="ts">14:22:04</td><td class="mn">34 / 34</td><td><span class="st s-wn"><i></i>Step-up</span></td><td><span class="st s-wn"><i></i>Step-up</span></td><td class="r"><span class="st s-ok"><i></i>Match</span></td></tr>
+      <tr><td class="mn">40187</td><td class="ts">14:19:52</td><td class="mn">34 / 34</td><td><span class="st s-sp"><i></i>Blocked</span></td><td><span class="st s-sp"><i></i>Blocked</span></td><td class="r"><span class="st s-ok"><i></i>Match</span></td></tr>
+      <tr><td class="mn">40155</td><td class="ts">14:11:03</td><td class="mn">34 / 34</td><td><span class="st s-ok"><i></i>Allowed</span></td><td><span class="st s-ok"><i></i>Allowed</span></td><td class="r"><span class="st s-ok"><i></i>Match</span></td></tr>
+    </tbody></table></div>
+</section>
+
+<!-- ═══════ 7 · GRAPH / RING ═══════ -->
+<section class="screen" id="ring">
+  <div class="ph"><div><h1>Graph / Ring</h1><p>Structural signals over accounts, devices and beneficiaries. Rings never block on their own.</p></div><div class="sp"></div>
+    <button class="pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 6h18M6 12h12M10 18h4"/></svg>Filter</button>
+    <button class="pill pri"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 12a9 9 0 11-3-6.7"/><path d="M21 3v6h-6"/></svg>Recompute</button></div>
+  <div class="row r4" style="margin-bottom:14px">
+    <div class="card met"><div class="lb">Components</div><div class="vl mny">2,841</div><div class="ft"><div class="dd">after decay · cap 5,000</div></div></div>
+    <div class="card met"><div class="lb">Flagged rings</div><div class="vl mny">7</div><div class="ft"><div class="dd">ring_score &gt; 0.60</div></div></div>
+    <div class="card met"><div class="lb">Shared devices</div><div class="vl mny">23</div><div class="ft"><div class="dd">2+ accounts per fingerprint</div></div></div>
+    <div class="card met"><div class="lb">Merchant false flags</div><div class="vl mny">0</div><div class="ft"><div class="dd">invariant holds</div><span class="st s-ok"><i></i>Pass</span></div></div>
+  </div>
+  <div class="sp2" style="margin-bottom:14px">
+    <div class="card"><div class="ch"><h2>Ring 0x1f · fan-out</h2><div class="sp"></div><span class="st s-hd"><i></i>ring_score 0.87</span></div>
+      <div class="gw" style="padding:0 10px 10px"><svg viewBox="0 0 420 260" style="width:100%;height:auto">
+        <g stroke="#CFE3C4" stroke-width="1.4"><line x1="210" y1="130" x2="330" y2="130"/><line x1="210" y1="130" x2="300" y2="60"/><line x1="210" y1="130" x2="210" y2="42"/><line x1="210" y1="130" x2="120" y2="60"/><line x1="210" y1="130" x2="90" y2="130"/><line x1="210" y1="130" x2="120" y2="200"/><line x1="210" y1="130" x2="210" y2="218"/><line x1="210" y1="130" x2="300" y2="200"/></g>
+        <g fill="#2AA3B5"><circle cx="330" cy="130" r="15"/><circle cx="300" cy="60" r="15"/><circle cx="210" cy="42" r="15"/><circle cx="120" cy="60" r="15"/><circle cx="90" cy="130" r="15"/><circle cx="120" cy="200" r="15"/><circle cx="210" cy="218" r="15"/><circle cx="300" cy="200" r="15"/></g>
+        <circle cx="210" cy="130" r="22" fill="#F2695C"/><text class="nl" x="210" y="168" style="font-weight:600">7c04…11da</text>
+      </svg></div>
+      <div class="bd" style="padding-top:0"><div class="stage" style="padding:0">
+        <span class="k">Fan-in 24h</span><div class="b"><i style="width:88%"></i></div><span class="v">11</span>
+        <span class="k">Forward ratio</span><div class="b"><i style="width:94%"></i></div><span class="v">0.94</span>
+        <span class="k">Hops to cash-out</span><div class="b"><i style="width:33%"></i></div><span class="v">2</span>
+      </div></div></div>
+    <div class="card"><div class="ch"><h2>Merchant control</h2><div class="sp"></div><span class="st s-ok"><i></i>ring_score 0.00</span></div>
+      <div class="gw" style="padding:0 10px 10px"><svg viewBox="0 0 420 260" style="width:100%;height:auto">
+        <g stroke="#E4E7EC" stroke-width="1.2">
+          <line x1="210" y1="130" x2="340" y2="130"/><line x1="210" y1="130" x2="315" y2="55"/><line x1="210" y1="130" x2="250" y2="35"/><line x1="210" y1="130" x2="170" y2="35"/><line x1="210" y1="130" x2="105" y2="55"/><line x1="210" y1="130" x2="80" y2="130"/><line x1="210" y1="130" x2="105" y2="205"/><line x1="210" y1="130" x2="170" y2="225"/><line x1="210" y1="130" x2="250" y2="225"/><line x1="210" y1="130" x2="315" y2="205"/></g>
+        <g fill="#98A2B3"><circle cx="340" cy="130" r="11"/><circle cx="315" cy="55" r="11"/><circle cx="250" cy="35" r="11"/><circle cx="170" cy="35" r="11"/><circle cx="105" cy="55" r="11"/><circle cx="80" cy="130" r="11"/><circle cx="105" cy="205" r="11"/><circle cx="170" cy="225" r="11"/><circle cx="250" cy="225" r="11"/><circle cx="315" cy="205" r="11"/></g>
+        <circle cx="210" cy="130" r="22" fill="#12805C"/><text class="nl" x="210" y="168" style="font-weight:600">More Retail</text>
+      </svg></div>
+      <div class="bd" style="padding-top:0"><div class="stage" style="padding:0">
+        <span class="k">Fan-in 24h</span><div class="b"><i style="width:96%;background:var(--ok)"></i></div><span class="v">500</span>
+        <span class="k">Forward ratio</span><div class="b"><i style="width:4%;background:var(--ok)"></i></div><span class="v">0.02</span>
+        <span class="k">Hops to cash-out</span><div class="b"><i style="width:0%;background:var(--ok)"></i></div><span class="v">—</span>
+      </div></div></div>
+  </div>
+  <div class="card"><div class="ch"><h2>Detected components</h2><div class="sp"></div><span class="sub">shadow lane · advisory only</span></div>
+    <table><thead><tr><th>Ring</th><th>Beneficiary</th><th class="r">Members</th><th class="r">Fan-in</th><th class="r">Fwd ratio</th><th class="r">Score</th><th>Action</th></tr></thead><tbody>
+      <tr><td class="mn">0x1f</td><td class="id">7c04…11da</td><td class="r mn">11</td><td class="r mn">11</td><td class="r mn">0.94</td><td class="r mn">0.87</td><td><span class="st s-hd"><i></i>Advisory</span></td></tr>
+      <tr><td class="mn">0x2c</td><td class="id">4a80…5e19</td><td class="r mn">8</td><td class="r mn">8</td><td class="r mn">0.81</td><td class="r mn">0.72</td><td><span class="st s-wn"><i></i>Advisory</span></td></tr>
+      <tr><td class="mn">0x3a</td><td class="id">9f13…c602</td><td class="r mn">6</td><td class="r mn">6</td><td class="r mn">0.66</td><td class="r mn">0.61</td><td><span class="st s-wn"><i></i>Advisory</span></td></tr>
+      <tr><td class="mn">0x44</td><td class="id">2b6e…9a04</td><td class="r mn">500</td><td class="r mn">500</td><td class="r mn">0.02</td><td class="r mn">0.00</td><td><span class="st s-nt"><i></i>Merchant</span></td></tr>
+    </tbody></table></div>
+</section>
+
+<!-- ═══════ 8 · CALIBRATION ═══════ -->
+<section class="screen" id="cal">
+  <div class="ph"><div><h1>Calibration</h1><p>Reliability on a natural-prevalence, time-forward slice. Thresholds follow expected cost.</p></div><div class="sp"></div>
+    <button class="pill"><span class="mn">upi-v1.4</span></button>
+    <button class="pill pri"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 3v12M7 10l5 5 5-5M4 20h16"/></svg>Export report</button></div>
+  <div class="row r4" style="margin-bottom:14px">
+    <div class="card met"><div class="lb">ECE</div><div class="vl mny">0.021</div><div class="ft"><div class="dd">15 bins · beta calibrated</div><span class="st s-ok"><i></i>Good</span></div></div>
+    <div class="card met"><div class="lb">Brier</div><div class="vl mny">0.0043</div><div class="ft"><div class="dd">natural prevalence slice</div></div></div>
+    <div class="card met"><div class="lb">PR-AUC</div><div class="vl mny">0.81</div><div class="ft"><div class="dd">held-out, time-forward</div></div></div>
+    <div class="card met"><div class="lb">Assumed prevalence</div><div class="vl mny">0.05<span class="un">%</span></div><div class="ft"><div class="dd">every ₹ threshold depends on this</div></div></div>
+  </div>
+  <div class="sp2" style="margin-bottom:14px">
+    <div class="card"><div class="ch"><h2>Reliability diagram</h2><div class="sp"></div><span class="sub">predicted vs observed</span></div>
+      <div style="padding:4px 18px 14px"><svg viewBox="0 0 400 300" style="width:100%;height:auto">
+        <g stroke="#EFF1F5"><line x1="40" y1="30" x2="380" y2="30"/><line x1="40" y1="97" x2="380" y2="97"/><line x1="40" y1="164" x2="380" y2="164"/><line x1="40" y1="231" x2="380" y2="231"/></g>
+        <line x1="40" y1="260" x2="380" y2="20" stroke="#C6C6C0" stroke-width="1.4" stroke-dasharray="5 5"/>
+        <polyline fill="none" stroke="#4F46E5" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" points="40,258 74,240 108,218 142,196 176,170 210,146 244,120 278,96 312,68 346,44 380,24"/>
+        <g fill="#4F46E5" stroke="#fff" stroke-width="2">
+          <circle cx="74" cy="240" r="4.5"/><circle cx="142" cy="196" r="4.5"/><circle cx="210" cy="146" r="4.5"/><circle cx="278" cy="96" r="4.5"/><circle cx="346" cy="44" r="4.5"/></g>
+        <line x1="40" y1="20" x2="40" y2="270" stroke="#DFE2E9"/><line x1="40" y1="270" x2="380" y2="270" stroke="#DFE2E9"/>
+        <text x="40" y="288" font-size="11" fill="#98A2B3" font-family="Geist">0.0</text>
+        <text x="200" y="288" font-size="11" fill="#98A2B3" font-family="Geist">0.5</text>
+        <text x="368" y="288" font-size="11" fill="#98A2B3" font-family="Geist">1.0</text>
+      </svg></div></div>
+    <div class="card"><div class="ch"><h2>Operating points</h2><div class="sp"></div><span class="badge i">2 segments</span></div>
+      <table><thead><tr><th>Segment</th><th class="r">Threshold</th><th class="r">Precision</th><th class="r">Recall</th><th class="r">Challenge</th></tr></thead><tbody>
+        <tr><td>UPI · new payee</td><td class="r mn">0.62</td><td class="r mn">0.34</td><td class="r mn">0.71</td><td class="r mn">2.1%</td></tr>
+        <tr><td>UPI · known payee</td><td class="r mn">0.81</td><td class="r mn">0.52</td><td class="r mn">0.48</td><td class="r mn">0.6%</td></tr>
+      </tbody></table>
+      <div class="bd" style="padding-top:14px"><div class="k" style="font-size:12px;color:var(--ink3);margin-bottom:8px">Prevalence sensitivity</div>
+        <div class="stage" style="padding:0">
+          <span class="k">0.02%</span><div class="b"><i style="width:22%"></i></div><span class="v">0.6%</span>
+          <span class="k">0.05%</span><div class="b"><i style="width:48%"></i></div><span class="v">1.4%</span>
+          <span class="k">0.10%</span><div class="b"><i style="width:84%"></i></div><span class="v">2.6%</span>
+        </div></div></div>
+  </div>
+  <div class="card"><div class="ch"><h2>Model registry</h2><div class="sp"></div><span class="sub">shadow before live</span></div>
+    <table><thead><tr><th>Bundle</th><th>Trained</th><th>Slice</th><th class="r">PR-AUC</th><th class="r">ECE</th><th>State</th></tr></thead><tbody>
+      <tr><td class="mn">upi-v1.4</td><td class="ts">2026-08-12</td><td>time-forward</td><td class="r mn">0.81</td><td class="r mn">0.021</td><td><span class="st s-ok"><i></i>Live</span></td></tr>
+      <tr><td class="mn">upi-v1.5-rc1</td><td class="ts">2026-08-14</td><td>time-forward</td><td class="r mn">0.83</td><td class="r mn">0.019</td><td><span class="st s-in"><i></i>Shadow</span></td></tr>
+      <tr><td class="mn">card-v0.9</td><td class="ts">2026-08-09</td><td>generator</td><td class="r mn">0.77</td><td class="r mn">0.034</td><td><span class="st s-nt"><i></i>Held</span></td></tr>
+    </tbody></table></div>
+</section>
+
+<!-- ═══════ 9 · LATENCY ═══════ -->
+<section class="screen" id="lat">
+  <div class="ph"><div><h1>Latency</h1><p>Queue, service and total measured separately. Quoted figures are always total.</p></div><div class="sp"></div>
+    <button class="pill"><span class="mn">n = 2,104,882</span></button>
+    <button class="pill pri"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 4l14 8-14 8z"/></svg>Run load test</button></div>
+  <div class="row r4" style="margin-bottom:14px">
+    <div class="card met"><div class="lb">p50 total</div><div class="vl mny">3.1<span class="un"> ms</span></div><div class="ft"><div class="dd">at 180 RPS</div></div></div>
+    <div class="card met"><div class="lb">p99 total</div><div class="vl mny">9.4<span class="un"> ms</span></div><div class="ft"><div class="dd">deadline 50 ms</div><span class="st s-ok"><i></i>Within budget</span></div></div>
+    <div class="card met"><div class="lb">p99.9 total</div><div class="vl mny">17.8<span class="un"> ms</span></div><div class="ft"><div class="dd">no deadline misses</div></div></div>
+    <div class="card met"><div class="lb">Max</div><div class="vl mny">1,727<span class="un"> ms</span></div><div class="ft"><div class="dd">first-request JIT warm-up</div></div></div>
+  </div>
+  <div class="sp1" style="margin-bottom:14px">
+    <div class="card"><div class="ch"><h2>Distribution</h2><div class="sp"></div><span class="sub">total, log-binned</span></div>
+      <div style="padding:6px 18px 12px"><svg viewBox="0 0 720 200" style="width:100%;height:auto">
+        <g fill="#4F46E5">
+          <rect x="20" y="150" width="34" height="30" rx="3"/><rect x="60" y="112" width="34" height="68" rx="3"/>
+          <rect x="100" y="58" width="34" height="122" rx="3"/><rect x="140" y="26" width="34" height="154" rx="3"/>
+          <rect x="180" y="44" width="34" height="136" rx="3"/><rect x="220" y="80" width="34" height="100" rx="3"/>
+          <rect x="260" y="110" width="34" height="70" rx="3"/><rect x="300" y="132" width="34" height="48" rx="3"/>
+          <rect x="340" y="148" width="34" height="32" rx="3"/><rect x="380" y="158" width="34" height="22" rx="3"/>
+          <rect x="420" y="165" width="34" height="15" rx="3"/><rect x="460" y="170" width="34" height="10" rx="3"/></g>
+        <g fill="#C7CBFA"><rect x="500" y="174" width="34" height="6" rx="3"/><rect x="540" y="176" width="34" height="4" rx="3"/>
+          <rect x="580" y="177" width="34" height="3" rx="3"/><rect x="620" y="178" width="34" height="2" rx="3"/><rect x="660" y="178" width="34" height="2" rx="3"/></g>
+        <line x1="20" y1="180" x2="700" y2="180" stroke="#DFE2E9"/>
+        <line x1="349" y1="14" x2="349" y2="184" stroke="#B54708" stroke-width="1.4" stroke-dasharray="4 4"/>
+        <text x="356" y="24" font-size="11" fill="#B54708" font-family="Geist" font-weight="500">p99 · 9.4 ms</text>
+      </svg>
+      <div class="xax" style="padding:0 4px"><span>1 ms</span><span>5 ms</span><span>10 ms</span><span>25 ms</span><span>50 ms</span><span>100 ms+</span></div></div></div>
+    <div class="card"><div class="ch"><h2>Stage breakdown</h2><div class="sp"></div><span class="sub">p99</span></div>
+      <div class="stage">
+        <span class="k">Queue</span><div class="b"><i style="width:2%"></i></div><span class="v">0.1 ms</span>
+        <span class="k">Profile read</span><div class="b"><i style="width:31%"></i></div><span class="v">2.9 ms</span>
+        <span class="k">Features</span><div class="b"><i style="width:13%"></i></div><span class="v">1.2 ms</span>
+        <span class="k">Model</span><div class="b"><i style="width:19%"></i></div><span class="v">1.8 ms</span>
+        <span class="k">Rules</span><div class="b"><i style="width:6%"></i></div><span class="v">0.6 ms</span>
+        <span class="k">Decision</span><div class="b"><i style="width:7%"></i></div><span class="v">0.7 ms</span>
+        <span class="k">Persist (async)</span><div class="b"><i style="width:22%"></i></div><span class="v">2.1 ms</span>
+      </div>
+      <div class="kvg" style="grid-template-columns:repeat(2,1fr)">
+        <div><div class="k">Deadline misses</div><div class="v mny">0</div></div>
+        <div><div class="k">Shed</div><div class="v mny">0</div></div>
+      </div></div>
+  </div>
+  <div class="card"><div class="ch"><h2>Load test runs</h2></div>
+    <table><thead><tr><th>Run</th><th>Time</th><th class="r">RPS</th><th class="r">n</th><th class="r">p50</th><th class="r">p99</th><th class="r">p99.9</th><th>Result</th></tr></thead><tbody>
+      <tr><td class="mn">lt-018</td><td class="ts">13:52:00</td><td class="r mn">180</td><td class="r mn">2,104,882</td><td class="r mn">3.1 ms</td><td class="r mn">9.4 ms</td><td class="r mn">17.8 ms</td><td><span class="st s-ok"><i></i>Pass</span></td></tr>
+      <tr><td class="mn">lt-017</td><td class="ts">13:20:00</td><td class="r mn">240</td><td class="r mn">1,880,004</td><td class="r mn">3.6 ms</td><td class="r mn">12.1 ms</td><td class="r mn">24.0 ms</td><td><span class="st s-ok"><i></i>Pass</span></td></tr>
+      <tr><td class="mn">lt-016</td><td class="ts">12:44:00</td><td class="r mn">320</td><td class="r mn">1,412,660</td><td class="r mn">5.2 ms</td><td class="r mn">31.7 ms</td><td class="r mn">58.2 ms</td><td><span class="st s-wn"><i></i>Shed 0.4%</span></td></tr>
+    </tbody></table></div>
+</section>
+
+<!-- ═══════ 10 · PAYER APP ═══════ -->
+<section class="screen" id="pay">
+  <div class="ph"><div><h1>Payer App</h1><p>What the customer sees. Human banking language only — no rung names, no scores, no signal IDs.</p></div><div class="sp"></div>
+    <button class="pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 14h7v7h-7z"/></svg>Show QR</button></div>
+
+  <div class="phones">
+    <div class="pw"><div class="phone"><div class="pscr"><div class="pnotch"></div>
+      <div class="pbar">9:41<span class="sp"></span>
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M2 17h3v4H2zM7 13h3v8H7zM12 9h3v12h-3zM17 4h3v17h-3z"/></svg>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="17" height="10" rx="2.5"/><path d="M22 11v2"/></svg></div>
+      <div class="pbody">
+        <div class="pnav"><div class="bk"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M15 5l-7 7 7 7"/></svg></div><b>Send money</b></div>
+        <div class="plab">Amount</div>
+        <div class="pamt mny">₹49,999<sup>.00</sup></div>
+        <div class="pcard"><div class="rowx"><span class="avx">RK</span><div><div class="nx">Rajesh Kumar</div><div class="sx">rajesh.k@okhdfcbank</div></div></div></div>
+        <div class="pkeys"><b>1</b><b>2</b><b>3</b><b>4</b><b>5</b><b>6</b><b>7</b><b>8</b><b>9</b><b>·</b><b>0</b><b>⌫</b></div>
+        <div class="psp"></div>
+        <button class="pbtn pri">Pay ₹49,999</button>
+      </div></div></div>
+      <div class="pcap"><b>1 · Pay</b>Ordinary flow. No risk language anywhere.</div></div>
+
+    <div class="pw"><div class="phone"><div class="pscr"><div class="pnotch"></div>
+      <div class="pbar">9:41<span class="sp"></span>
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M2 17h3v4H2zM7 13h3v8H7zM12 9h3v12h-3zM17 4h3v17h-3z"/></svg>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="17" height="10" rx="2.5"/><path d="M22 11v2"/></svg></div>
+      <div class="pbody">
+        <div class="pnav"><div class="bk"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M15 5l-7 7 7 7"/></svg></div><b>Before you send</b></div>
+        <div class="pcard w pwarn">
+          <div class="wico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 3l9 17H3z"/><path d="M12 10v4M12 17h.01"/></svg></div>
+          <h4>Take a look before you send</h4>
+          <p>This account is new to us, and a lot of people paid it today. That can be normal — it's also what a scam collection account looks like.</p>
+          <div class="pfacts">
+            <div class="pfact"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>We first saw this account 3 days ago</div>
+            <div class="pfact"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="9" cy="8" r="3.2"/><path d="M3 20a6 6 0 0112 0M17 11h4M19 9v4"/></svg>11 other people paid it today</div>
+            <div class="pfact"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 12h12M12 6l6 6-6 6"/></svg>Money usually leaves within a minute</div>
+          </div>
+        </div>
+        <div class="psp"></div>
+        <button class="pbtn dark">Go back</button>
+        <button class="pbtn gh">Send anyway</button>
+      </div></div></div>
+      <div class="pcap"><b>2 · Interstitial</b>Go back is weighted. The choice stays with the customer.</div></div>
+
+    <div class="pw"><div class="phone"><div class="pscr"><div class="pnotch"></div>
+      <div class="pbar">9:41<span class="sp"></span>
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M2 17h3v4H2zM7 13h3v8H7zM12 9h3v12h-3zM17 4h3v17h-3z"/></svg>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="17" height="10" rx="2.5"/><path d="M22 11v2"/></svg></div>
+      <div class="pbody">
+        <div class="pnav"><div class="bk"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M15 5l-7 7 7 7"/></svg></div><b>Confirm it's you</b></div>
+        <p style="font-size:13.5px;color:var(--ink2);line-height:20px">We sent a 6-digit code to the number ending <b style="font-family:var(--fm);font-weight:500">••4417</b>.</p>
+        <div class="otp"><span class="f">4</span><span class="f">1</span><span class="f">9</span><span class="c"></span><span></span><span></span></div>
+        <div style="font-size:12.5px;color:var(--ink4)">Resend in 0:24</div>
+        <div class="pcard" style="margin-top:16px"><div class="rowx"><span class="avx" style="background:var(--warn)">₹</span><div><div class="nx mny">₹49,999<sup>.00</sup></div><div class="sx">to rajesh.k@okhdfcbank</div></div></div></div>
+        <div class="psp"></div>
+        <button class="pbtn pri">Confirm payment</button>
+        <button class="pbtn gh">Cancel</button>
+      </div></div></div>
+      <div class="pcap"><b>3 · Step-up</b>Friction scales with risk, rather than a hard block.</div></div>
+
+    <div class="pw"><div class="phone"><div class="pscr"><div class="pnotch"></div>
+      <div class="pbar">9:41<span class="sp"></span>
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M2 17h3v4H2zM7 13h3v8H7zM12 9h3v12h-3zM17 4h3v17h-3z"/></svg>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="17" height="10" rx="2.5"/><path d="M22 11v2"/></svg></div>
+      <div class="pbody">
+        <div class="pmid">
+          <div class="pok"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M4 12.5l5 5 11-11"/></svg></div>
+          <h4>Payment sent</h4>
+          <p>₹49,999.00 to Rajesh Kumar<br>Reference <span class="mn">40219</span></p>
+          <div class="pcard" style="text-align:left"><div class="sx" style="font-family:var(--f);font-size:12.5px;color:var(--ink2);line-height:18px">If something feels wrong about this payment, report it in the app and we'll act within minutes.</div></div>
+        </div>
+        <button class="pbtn gho">Report a problem</button>
+        <button class="pbtn dark">Done</button>
+      </div></div></div>
+      <div class="pcap"><b>4 · Result</b>No green "verified" badge. Recovery is one tap away.</div></div>
+  </div>
+</section>
+
+</div></div></div>
+
+<script>
+document.querySelectorAll('.glyphs').forEach(G=>{
+  const pts=[[560,235,1],[529,141,1],[449,83,1],[351,83,1],[271,141,1],[240,235,1],[271,329,1],[351,387,1],[449,387,1],[529,329,1],[400,235,1.32]];
+  G.innerHTML=pts.map(([x,y,s])=>{const hr=5*s,bw=9*s,by=y+1*s;
+    return `<circle cx="${x}" cy="${y-4*s}" r="${hr}"/><path d="M${x-bw} ${by+8*s} a${bw} ${bw} 0 0 1 ${bw*2} 0 z"/>`;}).join('');
+});
+const navs=[...document.querySelectorAll('.nav')],scr=[...document.querySelectorAll('.screen')];
+navs.forEach(n=>n.addEventListener('click',()=>{
+  navs.forEach(x=>x.classList.remove('on'));n.classList.add('on');
+  scr.forEach(s=>s.classList.remove('on'));
+  document.getElementById(n.dataset.s).classList.add('on');
+  window.scrollTo({top:0});
+}));
+document.querySelectorAll('tbody tr').forEach(r=>r.addEventListener('click',()=>{
+  const b=r.closest('tbody');b.querySelectorAll('tr').forEach(x=>x.classList.remove('sel'));r.classList.add('sel');
+}));
+document.querySelectorAll('.pill.gh').forEach(b=>b.addEventListener('click',()=>{
+  b.parentElement.querySelectorAll('.pill.gh').forEach(x=>x.classList.remove('on'));b.classList.add('on');
+}));
+</script>
+</body>
+</html>

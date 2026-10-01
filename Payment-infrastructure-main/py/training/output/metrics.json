@@ -1,0 +1,188 @@
+{
+  "n_train": 103061,
+  "n_cal": 22085,
+  "n_test": 22085,
+  "n_test_pos": 53,
+  "split": "time-forward: train on earliest 70%, calibrate on next 15%, test on latest 15%",
+  "roc_auc": 0.9834601642893356,
+  "pr_auc": 0.8335367125879217,
+  "brier": 0.000777466124630681,
+  "ece": 0.0003287265342765849,
+  "operating_points": [
+    {
+      "threshold": 0.05,
+      "precision": 0.8863636363636364,
+      "recall": 0.7358490566037735,
+      "f1": 0.8041237113402062,
+      "true_positives": 39,
+      "false_positives": 5,
+      "alerts_per_10k": 19.923024677382838
+    },
+    {
+      "threshold": 0.1,
+      "precision": 0.9069767441860465,
+      "recall": 0.7358490566037735,
+      "f1": 0.8124999999999999,
+      "true_positives": 39,
+      "false_positives": 4,
+      "alerts_per_10k": 19.470228661987775
+    },
+    {
+      "threshold": 0.25,
+      "precision": 0.9047619047619048,
+      "recall": 0.7169811320754716,
+      "f1": 0.8,
+      "true_positives": 38,
+      "false_positives": 4,
+      "alerts_per_10k": 19.01743264659271
+    },
+    {
+      "threshold": 0.5,
+      "precision": 0.926829268292683,
+      "recall": 0.7169811320754716,
+      "f1": 0.8085106382978724,
+      "true_positives": 38,
+      "false_positives": 3,
+      "alerts_per_10k": 18.564636631197647
+    },
+    {
+      "threshold": 0.75,
+      "precision": 0.95,
+      "recall": 0.7169811320754716,
+      "f1": 0.8172043010752688,
+      "true_positives": 38,
+      "false_positives": 2,
+      "alerts_per_10k": 18.11184061580258
+    },
+    {
+      "threshold": 0.9,
+      "precision": 0.95,
+      "recall": 0.7169811320754716,
+      "f1": 0.8172043010752688,
+      "true_positives": 38,
+      "false_positives": 2,
+      "alerts_per_10k": 18.11184061580258
+    }
+  ],
+  "per_typology_recall": {
+    "app_scam": {
+      "n": 7,
+      "recall": 0.42857142857142855
+    },
+    "ato": {
+      "n": 4,
+      "recall": 1.0
+    },
+    "card_testing": {
+      "n": 30,
+      "recall": 0.9
+    },
+    "mule_fanout": {
+      "n": 12,
+      "recall": 0.3333333333333333
+    }
+  },
+  "ablation": [
+    {
+      "name": "full feature set",
+      "pr_auc": 0.8335367125879217,
+      "recall": 0.7169811320754716,
+      "precision": 0.926829268292683
+    },
+    {
+      "name": "without network / beneficiary graph",
+      "pr_auc": 0.376723025696174,
+      "recall": 0.41509433962264153,
+      "precision": 0.8148148148148148,
+      "features_removed": 9
+    },
+    {
+      "name": "without velocity",
+      "pr_auc": 0.7999141702444763,
+      "recall": 0.7735849056603774,
+      "precision": 0.9761904761904762,
+      "features_removed": 6
+    },
+    {
+      "name": "without device & network identity",
+      "pr_auc": 0.8314908197708337,
+      "recall": 0.660377358490566,
+      "precision": 0.9459459459459459,
+      "features_removed": 5
+    },
+    {
+      "name": "without relationship history",
+      "pr_auc": 0.48048998386044217,
+      "recall": 0.3018867924528302,
+      "precision": 1.0,
+      "features_removed": 3
+    }
+  ],
+  "feature_importance": [
+    {
+      "feature": "payee_fanin_burstiness",
+      "gain_share": 0.3259846814540568
+    },
+    {
+      "feature": "txn_velocity_5m",
+      "gain_share": 0.1632944366908401
+    },
+    {
+      "feature": "payee_inflow_concentration",
+      "gain_share": 0.13722010270272467
+    },
+    {
+      "feature": "asn_is_new_to_payer",
+      "gain_share": 0.09896530181345282
+    },
+    {
+      "feature": "amt_robust_z",
+      "gain_share": 0.0639824285301536
+    },
+    {
+      "feature": "baseline_staleness_h",
+      "gain_share": 0.05144923436537045
+    },
+    {
+      "feature": "payee_first_seen_by_us_days",
+      "gain_share": 0.04330864505743259
+    },
+    {
+      "feature": "geo_jump_kmh",
+      "gain_share": 0.03381483635993689
+    },
+    {
+      "feature": "dormancy_days",
+      "gain_share": 0.02731284083872795
+    },
+    {
+      "feature": "hour_surprisal",
+      "gain_share": 0.014183128399470895
+    },
+    {
+      "feature": "pair_txn_count_90d",
+      "gain_share": 0.00954641647778864
+    },
+    {
+      "feature": "asn_acct_degree_1h",
+      "gain_share": 0.00864052727283883
+    },
+    {
+      "feature": "account_age_days",
+      "gain_share": 0.007822678001005636
+    },
+    {
+      "feature": "cold_start_features_n",
+      "gain_share": 0.006485911243292489
+    },
+    {
+      "feature": "device_first_seen_hours",
+      "gain_share": 0.002586992775902762
+    }
+  ],
+  "tier": "RECOVERED",
+  "tier_note": "Measured on a real time-forward held-out split, but the labels are this repo's own generator ground truth. It validates the pipeline; it is not a real-world detection rate.",
+  "prevalence": 0.0018678131643471824,
+  "n_labelled_total": 147231,
+  "n_fraud_total": 275
+}

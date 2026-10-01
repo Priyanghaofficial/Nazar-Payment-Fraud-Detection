@@ -1,0 +1,55 @@
+# policy/2026-08-14.001.yaml — versioned policy bundle (docs/00 §10). Every decision stamps
+# this version. Rollback is instant: point the registry at a prior file.
+
+version: "2026-08-14.001"
+effective_from: "2026-08-14T00:00:00Z"
+approved_by: ["risk.owner@nazar.demo", "approver@nazar.demo"] # four-eyes, both required
+
+economics:
+  loss_given_fraud: { UPI: 0.95, IMPS: 0.95, NEFT: 0.5, CARD_CNP: 0.2, CARD_CP: 0.05 }
+  friction_cost_minor:
+    allow: 0
+    allow_monitor: 0
+    step_up: 1200
+    step_up_interstitial: 4000
+    hold: 90000
+    false_block: 250000
+  abandon_prob:
+    allow: 0.0
+    allow_monitor: 0.0
+    step_up: 0.02
+    step_up_interstitial: 0.06
+    hold: 0.35
+  stop_prob: # P(fraud actually stopped | action) — docs/04 §2
+    allow: 0.0
+    allow_monitor: 0.0
+    step_up: 0.55
+    step_up_interstitial: 0.80
+    hold: 0.97
+  margin_minor: 3000 # average lost-good-business margin on an abandoned legitimate txn
+
+ladder:
+  rungs: [ALLOW, ALLOW_MONITOR, STEP_UP, STEP_UP_INTERSTITIAL, HOLD]
+  advisory_max_rung: STEP_UP_INTERSTITIAL # advisories can NEVER reach HOLD — F-20
+  advisory_max_steps: 2
+  min_reporter_reputation: 0.3
+  max_advisory_age_hours: 72
+  min_advisory_confidence: 0.5
+
+trusted_pair:
+  min_txn_count_90d: 5
+  amount_headroom_ratio: 1.5 # amt <= amt_p95 * 1.5
+  sample_rate: 0.02 # fast-pathed pairs still sampled into full scoring (docs/04 §4)
+
+degradation:
+  value_cap_minor: 200000 # cap applied under degradation instead of denying (D7)
+
+control_group:
+  fraction: 0.005
+  exempt: [regulatory_rails, local_confirmed_blocklist]
+
+segments:
+  - match: { rail: UPI, amount_band: "high" } # >= Rs 10,000
+    target_challenge_rate: 0.02
+  - match: { rail: UPI, amount_band: "low" }
+    target_challenge_rate: 0.004

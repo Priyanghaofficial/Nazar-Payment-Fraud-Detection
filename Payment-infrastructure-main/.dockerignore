@@ -1,0 +1,10 @@
+.git
+data
+bin
+console/node_modules
+console/dist
+**/__pycache__
+**/.venv
+.env.local
+docs
+*.md

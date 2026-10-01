@@ -1,0 +1,77 @@
+# rules/2026-08-14.001.yaml — versioned CEL rule bundle (docs/00 §10, docs/04 §3).
+# CEL only. No eval. F-72. Compiled once at bundle load (go/internal/rules).
+#
+# class: regulatory (absolute by law, may BLOCK/CAP) | policy (ours, may never BLOCK — D7)
+# action: CAP | STEP_UP_INTERSTITIAL | STEP_UP | NONE (rule-feature only, docs/02 §4.5)
+#
+# Every rule's predicate is ALSO exposed as a boolean feature `rf_<id>` regardless of
+# action, so the model sees exactly what the rails saw (docs/02 §4.5) — this is what makes
+# the rails-vs-model double-counting problem structurally impossible.
+
+version: "2026-08-14.001"
+effective_from: "2026-08-14T00:00:00Z"
+
+rules:
+  - id: RAIL-001
+    class: regulatory
+    authority: "NPCI UPI beneficiary cooling period"
+    verified_on: "2026-08-14"
+    predicate: "pair.first_added_within_hours < 24.0 && event.amount_minor > 500000"
+    action: CAP
+    cap_minor: 500000
+    rails: [UPI, IMPS]
+    explanation: "New beneficiary (added to this payer within 24h) attempting a payment above the regulatory cooling cap."
+
+  - id: RAIL-101
+    class: policy
+    predicate: "payer.baseline_txn_1h_p999 > 0.0 && double(payer.txn_count_1h) > payer.baseline_txn_1h_p999 * 3.0"
+    action: STEP_UP_INTERSTITIAL
+    rails: [UPI, IMPS, NEFT]
+    explanation: "Payer's 1-hour transaction count is more than 3x their own baseline p999 — extreme velocity relative to their own history, never an absolute count (D3)."
+
+  - id: RAIL-102
+    class: policy
+    # Deliberately BELOW RAIL-001's Rs 5,000 regulatory cap threshold: above that, the
+    # cooling-period CAP is the harder, non-negotiable regulatory response and preempts
+    # this rule (docs/04 §1: local filters + regulatory rails run first). Below it, this is
+    # the softer, overridable warning docs/04 §7 Act 1 describes — the actual APP-scam demo
+    # beat (Milestone 1's "STEP_UP_INTERSTITIAL with correct reason codes" gate).
+    predicate: "payee.is_new_to_payer && event.amount_minor > 200000 && event.amount_minor <= 500000"
+    action: STEP_UP_INTERSTITIAL
+    rails: [UPI, IMPS, NEFT]
+    explanation: "First-ever payment from this payer to this payee, above Rs 2,000 — the core APP-scam pattern (docs/06 Milestone 1)."
+
+  - id: RF-001
+    class: policy
+    predicate: "payee.is_new_to_payer && event.amount_minor > 500000"
+    action: NONE
+    rails: [UPI, IMPS, NEFT]
+    explanation: "New payee, above Rs 5,000 — rule-feature only, no rail action."
+
+  - id: RF-002
+    class: policy
+    predicate: "payee.fanin_24h >= 6 && payee.fanin_burstiness > 3.0"
+    action: NONE
+    rails: [UPI, IMPS, NEFT]
+    explanation: "Payee's inflow is bursty relative to its own 24h rate — mule fan-out shape."
+
+  - id: RF-003
+    class: policy
+    predicate: "device.is_new_to_payer && event.amount_minor > 300000"
+    action: NONE
+    rails: [UPI, IMPS, NEFT]
+    explanation: "Unrecognised device on this account, above Rs 3,000."
+
+  - id: RF-004
+    class: policy
+    predicate: "pair.first_added_within_hours < 72.0"
+    action: NONE
+    rails: [UPI, IMPS, NEFT]
+    explanation: "Beneficiary relationship is less than 72h old — a softer signal than the regulatory 24h cooling rail."
+
+  - id: RF-005
+    class: policy
+    predicate: "geo_jump_kmh > 800.0"
+    action: NONE
+    rails: [UPI, IMPS, NEFT]
+    explanation: "Implied travel speed between this payer's last known location and this transaction exceeds 800 km/h — faster than commercial air travel."

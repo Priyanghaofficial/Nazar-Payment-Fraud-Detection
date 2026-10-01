@@ -1,0 +1,30 @@
+# Secrets
+.env.local
+.env
+
+# Generated datasets — regenerate with `make generate` (see README).
+# Large and fully reproducible from a fixed seed, so they are not history.
+data/generated/*.jsonl
+!data/generated/demo_scenarios.jsonl
+!data/generated/demo_scenarios_labels.jsonl
+data/generated-v2/
+# Third-party dataset, fetched on demand by `make validate-ulb`
+data/ulb/
+# Runtime write-ahead log
+data/wal.ndjson
+
+# Build artefacts
+bin/
+console/dist/
+console/node_modules/
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+
+# Editor / OS
+.DS_Store
+*.swp
+.idea/
+.vscode/

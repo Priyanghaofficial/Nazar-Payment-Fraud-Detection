@@ -1,0 +1,63 @@
+# Full Nazar stack. `docker compose up -d --build` and the console is on :80.
+services:
+  redis:
+    image: redis:7-alpine
+    container_name: nazar-redis
+    command: redis-server --appendonly no
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: nazar
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-nazar}
+      POSTGRES_DB: nazar
+    # Applied once, on an empty data directory, in filename order.
+    volumes:
+      - ./sql/migrations:/docker-entrypoint-initdb.d:ro
+      - pgdata:/var/lib/postgresql/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U nazar -d nazar"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  nazar:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      REDIS_ADDR: redis:6379
+      POSTGRES_DSN: postgres://nazar:${POSTGRES_PASSWORD:-nazar}@postgres:5432/nazar?sslmode=disable
+      NAZAR_LLM_API_KEYS: ${NAZAR_LLM_API_KEYS:-}
+      NAZAR_LLM_MODEL: ${NAZAR_LLM_MODEL:-openai/gpt-oss-120b}
+      NAZAR_CONTAINER_ENGINE: docker
+      NAZAR_REDIS_CONTAINER: nazar-redis
+    volumes:
+      - waldata:/data
+      - /var/run/docker.sock:/var/run/docker.sock
+    user: root  # required to access the Docker socket for chaos (stop/start Redis)
+    depends_on:
+      redis:      {condition: service_healthy}
+      postgres:   {condition: service_healthy}
+    restart: unless-stopped
+
+  console:
+    build:
+      context: ./console
+      dockerfile: Dockerfile
+    ports:
+      - "${CONSOLE_PORT:-80}:80"
+    depends_on:
+      - nazar
+    restart: unless-stopped
+
+volumes:
+  pgdata:
+  waldata:

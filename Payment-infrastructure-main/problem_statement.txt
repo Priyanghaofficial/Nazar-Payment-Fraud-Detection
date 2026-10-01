@@ -1,0 +1,7 @@
+Real-Time Payments Fraud Detection Dashboard
+Problem Statement
+Fraudulent transactions must be detected within seconds to prevent financial losses while minimizing customer friction. Develop a fraud detection platform capable of monitoring payment streams in real time, assigning risk scores, detecting anomalies, providing investigation tools, and offering fraud explanations.
+
+Expected Capabilities
+Real-time monitoring Fraud scoring Anomaly detection Alert management Investigation workflows
+

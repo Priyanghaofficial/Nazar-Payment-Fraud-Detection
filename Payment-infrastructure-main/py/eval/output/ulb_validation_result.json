@@ -1,0 +1,10 @@
+{
+  "dataset": "ULB creditcard (OpenML id=1597)",
+  "gpu_used": true,
+  "roc_auc": 0.9818512659257957,
+  "pr_auc": 0.8013131431899159,
+  "n_test": 85443,
+  "n_fraud_test": 108,
+  "tier": "MEASURED",
+  "note": "Validates training methodology on real labelled fraud; feature space is unrelated to Nazar's own registry and this model is NOT used for live scoring."
+}
